@@ -2,6 +2,7 @@ package com.es.core.model.phone;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,25 +37,13 @@ public class JdbcColorDaoTest {
     @Test
     public void saveSetColorSetWithNewColorsByPhoneIdTest() {
         final long phoneId = 1001;
-        int tableSizeBeforeInsert = getPhone2ColorCount();
+        int tableSizeBeforeInsert = getPhoneToColorCount();
         Set<Color> colors = new HashSet<>();
         colors.add(createNewColor());
         colorDao.save(colors, phoneId);
-        int tableSizeAfterInsert = getPhone2ColorCount();
+        int tableSizeAfterInsert = getPhoneToColorCount();
         assertThat(tableSizeBeforeInsert, is(tableSizeAfterInsert - colors.size()));
     }
-
-//    @Rollback(true)
-//    @Test
-//    public void saveSetColorSetWithExistingColorsByPhoneIdTest() {
-//        final long phoneId = 1001;
-//        int tableSizeBeforeInsert = getPhone2ColorCount();
-//        Set<Color> colors = new HashSet<>();
-//        colors.add(createExistingColor());
-//        colorDao.save(colors, phoneId);
-//        int tableSizeAfterInsert = getPhone2ColorCount();
-//        assertThat(tableSizeBeforeInsert, is(tableSizeAfterInsert));
-//    }
 
     @Rollback(true)
     @Test
@@ -66,7 +55,7 @@ public class JdbcColorDaoTest {
     }
 
     @Rollback(true)
-    @Test
+    @Test(expected = DataAccessException.class)
     public void saveExistingColorTest() {
         int tableSizeBeforeInsert = getColorsCount();
         colorDao.save(createExistingColor());
@@ -76,7 +65,7 @@ public class JdbcColorDaoTest {
 
     public Color createNewColor() {
         Color color =  new Color();
-        color.setCode("purple");
+        color.setCode("123457");
         return color;
     }
 
@@ -90,7 +79,7 @@ public class JdbcColorDaoTest {
         return this.namedParameterJdbcTemplate.getJdbcOperations().queryForObject("select count(*) from colors", Integer.class);
     }
 
-    public int getPhone2ColorCount() {
+    public int getPhoneToColorCount() {
         return this.namedParameterJdbcTemplate.getJdbcOperations().queryForObject("select count(*) from phone2color", Integer.class);
     }
 }

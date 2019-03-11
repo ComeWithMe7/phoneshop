@@ -1,20 +1,15 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.Phone;
-
 import java.util.Map;
 
 public interface CartService {
 
     Cart getCart();
 
-    void addPhone(Long phoneId, Long quantity);
+    void addPhone(Long phoneId, Long quantity, Cart cart);
 
-    /**
-     * @param items
-     * key: {@link Phone#id}
-     * value: quantity
-     */
+    void addPhone(CartItem cartItem, Cart cart);
+
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
