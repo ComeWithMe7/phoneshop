@@ -28,7 +28,11 @@ public class Cart {
         total = BigDecimal.ZERO;
     }
 
-    public void add(CartItem cartItem) {
-        cartItems.add(cartItem);
+    public Set<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(Set<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

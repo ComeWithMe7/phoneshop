@@ -1,30 +1,27 @@
 package com.es.core.cart;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import com.es.core.model.phone.Phone;
 
 public class CartItem {
 
-    private Long id;
+    private Phone phone;
 
-    @NotNull
-    @Min(1)
     private Long quantity;
 
     public CartItem() {
     }
 
-    public CartItem(@NotNull Long id, @Min(0) @NotNull Long quantity) {
-        this.id = id;
+    public CartItem(Phone phone, Long quantity) {
+        this.phone = phone;
         this.quantity = quantity;
     }
 
-    public Long getId() {
-        return id;
+    public Phone getPhone() {
+        return phone;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPhone(Phone phone) {
+        this.phone = phone;
     }
 
     public Long getQuantity() {

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -23,20 +24,20 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity, Cart cart) {
-        cart.add(new CartItem(phoneId, quantity));
-        System.out.println(phoneId);
-        Optional<Phone> phone = phoneDao.get(phoneId);
-        if (phone.isPresent() && phone.get().getPrice() != null) {
-             cart.setTotal(cart.getTotal().add(phone.get().getPrice().multiply(BigDecimal.valueOf(quantity))));
-        }
-    }
-
-    @Override
-    public void addPhone(CartItem cartItem, Cart cart) {
-        cart.add(cartItem);
-        Optional<Phone> phone = phoneDao.get(cartItem.getId());
-        if (phone.isPresent() && phone.get().getPrice() != null) {
-            cart.setTotal(cart.getTotal().add(phone.get().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()))));
+        Set<CartItem> cartItems = cart.getCartItems();
+        Optional<CartItem> cartItem = cartItems.stream()
+                .filter(x -> phoneId.equals(x.getPhone().getId()))
+                .findAny();
+        if (cartItem.isPresent() && cartItem.get().getPhone().getPrice() != null) {
+            CartItem existingCartItem = cartItem.get();
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+            cart.setTotal(cart.getTotal().add(existingCartItem.getPhone().getPrice().multiply(BigDecimal.valueOf(quantity))));
+        } else {
+            Optional<Phone> phone = phoneDao.get(phoneId);
+            if (phone.isPresent() && phone.get().getPrice() != null) {
+                cartItems.add(new CartItem(phone.get(), quantity));
+                cart.setTotal(cart.getTotal().add(phone.get().getPrice().multiply(BigDecimal.valueOf(quantity))));
+            }
         }
     }
 

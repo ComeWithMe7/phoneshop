@@ -8,8 +8,6 @@ public interface CartService {
 
     void addPhone(Long phoneId, Long quantity, Cart cart);
 
-    void addPhone(CartItem cartItem, Cart cart);
-
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);

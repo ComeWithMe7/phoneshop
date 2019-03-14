@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.phoneshop.web.controller.pages.model.AjaxCartUpdate;
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
+import com.es.phoneshop.web.controller.pages.model.AjaxCartUpdate;
+import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,17 +20,15 @@ public class AjaxCartController {
     private CartService cartService;
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public AjaxCartUpdate addPhone(@Valid @RequestBody CartItem cartItem, BindingResult errors) {
+    public AjaxCartUpdate addPhone(@Valid @RequestBody CartItemUpdate cartItemUpdate, BindingResult errors) {
         AjaxCartUpdate ajaxResponse = new AjaxCartUpdate();
         Cart cart = cartService.getCart();
         if (errors.hasErrors()) {
             ajaxResponse.setQuantityError("error");
-            ajaxResponse.setTotal(cart.getTotal());
-            return ajaxResponse;
         } else {
-            cartService.addPhone(cartItem, cart);
-            ajaxResponse.setTotal(cart.getTotal());
-            return ajaxResponse;
+            cartService.addPhone(cartItemUpdate.getId(), cartItemUpdate.getQuantity(), cart);
         }
+        ajaxResponse.setTotal(cart.getTotal());
+        return ajaxResponse;
     }
 }

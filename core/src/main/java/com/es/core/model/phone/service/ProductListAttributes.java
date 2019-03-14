@@ -4,7 +4,7 @@ import com.es.core.model.phone.Phone;
 
 import java.util.List;
 
-public class PhoneDaoAnswer {
+public class ProductListAttributes {
 
     private List<Phone> phones;
 

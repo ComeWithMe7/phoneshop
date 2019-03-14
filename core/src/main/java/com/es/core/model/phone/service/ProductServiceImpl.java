@@ -10,7 +10,7 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private PhoneDao phoneDao;
 
-    public PhoneDaoAnswer findProducts(String sortParam, String gradation, String searchLine, int offset, int limit) {
+    public ProductListAttributes findProducts(String sortParam, String gradation, String searchLine, int offset, int limit) {
         if (!searchLine.isEmpty() && !sortParam.isEmpty() && !gradation.isEmpty()) {
             return phoneDao.findByTemplateAndSort(searchLine, sortParam, gradation, offset, limit);
         } else if (!searchLine.isEmpty()) {
@@ -23,15 +23,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PhoneDaoAnswer setPages(PhoneDaoAnswer phoneDaoAnswer, Integer pageNumber, int limitQuantity, int limitPages) {
-        if (Math.ceil((double) phoneDaoAnswer.getPhonesQuantity() / limitQuantity) > (Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages) {
-            phoneDaoAnswer.setPageLimit((int) ((Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages));
-            phoneDaoAnswer.setStartPage((int) ((double) phoneDaoAnswer.getPageLimit() / limitPages - 1) * 10 + 1);
+    public ProductListAttributes setPages(ProductListAttributes productListAttributes, Integer pageNumber, int limitQuantity, int limitPages) {
+        if (Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity) > (Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages) {
+            productListAttributes.setPageLimit((int) ((Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages));
+            productListAttributes.setStartPage((int) ((double) productListAttributes.getPageLimit() / limitPages - 1) * 10 + 1);
         } else {
-            phoneDaoAnswer.setPageLimit((int) Math.ceil((double) phoneDaoAnswer.getPhonesQuantity() / limitQuantity));
-            phoneDaoAnswer.setStartPage((int) (Math.floor(pageNumber.doubleValue() / limitPages) * limitPages + 1));
+            productListAttributes.setPageLimit((int) Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity));
+            productListAttributes.setStartPage((int) (Math.floor(pageNumber.doubleValue() / limitPages) * limitPages + 1));
         }
-        phoneDaoAnswer.setFinalPage((int) Math.ceil((double) phoneDaoAnswer.getPhonesQuantity() / limitQuantity));
-        return phoneDaoAnswer;
+        productListAttributes.setFinalPage((int) Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity));
+        return productListAttributes;
     }
 }

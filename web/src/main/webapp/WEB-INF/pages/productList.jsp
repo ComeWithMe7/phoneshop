@@ -33,16 +33,12 @@
                     $("#total").html("");
                     $("#quantityError" + phoneId).html("");
                     console.log(data);
-                    var html = document.createElement('div');
                     var text = document.createTextNode(receivedObject.total);
-                    html.appendChild(text);
-                    var html2 = document.createElement('div');
                     var text2 = document.createTextNode(receivedObject.quantityError);
-                    html2.appendChild(text2);
                     var domElement1 = document.getElementById('total');
-                    domElement1.appendChild(html);
+                    domElement1.appendChild(text);
                     var domElement2 = document.getElementById('quantityError' + phoneId);
-                    domElement2.appendChild(html2);
+                    domElement2.appendChild(text2);
                 },
                 error: function (result) {
                     console.log("ERROR: ", result);

@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.CartService;
-import com.es.core.model.phone.service.PhoneDaoAnswer;
+import com.es.core.model.phone.service.ProductListAttributes;
 import com.es.core.model.phone.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,16 +28,16 @@ public class ProductListPageController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(@RequestParam(value = "sortingParameter", defaultValue = "") String sortParam, @RequestParam(value = "gradation", defaultValue = "") String gradation, @RequestParam(value = "searchLine", defaultValue = "") String searchLine, @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber, Model model, HttpSession session) {
-        PhoneDaoAnswer phoneDaoAnswer = productService.findProducts(sortParam, gradation, searchLine, (pageNumber - 1) * QUANTITY_LIMIT, QUANTITY_LIMIT);
-        phoneDaoAnswer = productService.setPages(phoneDaoAnswer, pageNumber, QUANTITY_LIMIT, PAGE_LIMIT);
-        model.addAttribute("phones", phoneDaoAnswer.getPhones());
-        model.addAttribute("countPhones", phoneDaoAnswer.getPhonesQuantity());
+        ProductListAttributes productListAttributes = productService.findProducts(sortParam, gradation, searchLine, (pageNumber - 1) * QUANTITY_LIMIT, QUANTITY_LIMIT);
+        productListAttributes = productService.setPages(productListAttributes, pageNumber, QUANTITY_LIMIT, PAGE_LIMIT);
+        model.addAttribute("phones", productListAttributes.getPhones());
+        model.addAttribute("countPhones", productListAttributes.getPhonesQuantity());
         model.addAttribute("searchLineAttrib", searchLine);
         model.addAttribute("sortParam", sortParam);
         model.addAttribute("gradation", gradation);
-        model.addAttribute("pageLimit", phoneDaoAnswer.getPageLimit());
-        model.addAttribute("startPage", phoneDaoAnswer.getStartPage());
-        model.addAttribute("finalPage", phoneDaoAnswer.getFinalPage());
+        model.addAttribute("pageLimit", productListAttributes.getPageLimit());
+        model.addAttribute("startPage", productListAttributes.getStartPage());
+        model.addAttribute("finalPage", productListAttributes.getFinalPage());
         model.addAttribute("cartTotal", cartService.getCart().getTotal());
         return "productList";
     }
