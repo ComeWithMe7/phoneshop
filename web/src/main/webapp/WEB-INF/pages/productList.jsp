@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxCartUpdate.js"></script>--%>
 <header>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -10,42 +10,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-    <%--<script type="text/javascript" src="ajaxCartUpdate.js"></script>--%>
+    <script type="text/javascript" src="<spring:url value="/resources/js/ajaxUpdateCart.js"/> "></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <%--<script type="text/javascript" src="/webapp/WEB-INF/js/ajaxCartUpdate.js"--%>
-    <script type="text/javascript">
-        var url = "<c:url value="/ajaxCart"></c:url>";
 
-        function myFunction(phoneId) {
-            var quantityx = "quantity" + phoneId;
-            $.ajax({
-                type: "POST",
-                url: url,
-                datatype: 'json',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    "id": parseInt(phoneId),
-                    "quantity": parseInt($('#' + "quantity" + phoneId).val())
-                }),
-                success: function (data) {
-                    var receivedObject = data;
-                    $("#total").html("");
-                    $("#quantityError" + phoneId).html("");
-                    console.log(data);
-                    var text = document.createTextNode(receivedObject.total);
-                    var text2 = document.createTextNode(receivedObject.quantityError);
-                    var domElement1 = document.getElementById('total');
-                    domElement1.appendChild(text);
-                    var domElement2 = document.getElementById('quantityError' + phoneId);
-                    domElement2.appendChild(text2);
-                },
-                error: function (result) {
-                    console.log("ERROR: ", result);
-                }
-            });
-        }
-    </script>
     <!-- JQuerry library -->
 </header>
 
@@ -56,11 +24,16 @@
 <form method="get">
     <p>
         <input type="search" name="searchLine" placeholder="Site search" value="<c:out value="${searchLineAttrib}"/>">
+        <input type="hidden" name="sortingParameter" value="${sortParam}"/>
+        <input type="hidden" name="gradation" value="${gradation}"/>
         <input type="submit" value="Search"></p>
     </p>
 </form>
 <p>
     Hello from product list!
+</p>
+<p>
+    <a href="<c:url value="/cart"/>">Cart</a>
 </p>
 <p>
     Found
@@ -93,7 +66,7 @@
                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
             </td>
             <td>${phone.brand}</td>
-            <td>${phone.model}</td>
+            <td><a href="<c:url value="productDetails/${phone.id}"/>">${phone.model}</a></td>
             <td>
                 <c:forEach var="color" items="${phone.colors}">
                     ${color.code} <br>
@@ -119,16 +92,23 @@
     <ul class="pagination">
         <li class="page-item">
             <a class="page-link"
-               href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="${sortParam}" value="brand"/><c:param name="gradation" value="${gradation}"/><c:param name="pageNumber" value="1"/></c:url>"
+               href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="sortingParameter" value="${sortParam}"/><c:param name="gradation" value="${gradation}"/><c:param name="pageNumber" value="1"/></c:url>"
                aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Previous</span>
             </a>
         </li>
         <c:forEach var="page" begin="${startPage}" end="${pageLimit}">
-            <li class="page-item"><a class="page-link"
-                                     href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="sortingParameter" value="${sortParam}"/><c:param name="gradation" value="${gradation}"/><c:param name="pageNumber" value="${page}"/></c:url>">${page}</a>
-            </li>
+            <c:if test="${page == currentPage}">
+                <li class="page-item active"><a class="page-link"
+                                         href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="sortingParameter" value="${sortParam}"/><c:param name="gradation" value="${gradation}"/><c:param name="pageNumber" value="${page}"/></c:url>">${page}</a>
+                </li>
+            </c:if>
+            <c:if test="${page != currentPage}">
+                <li class="page-item"><a class="page-link"
+                                         href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="sortingParameter" value="${sortParam}"/><c:param name="gradation" value="${gradation}"/><c:param name="pageNumber" value="${page}"/></c:url>">${page}</a>
+                </li>
+            </c:if>
         </c:forEach>
         <li class="page-item">
             <a class="page-link"

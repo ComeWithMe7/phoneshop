@@ -18,7 +18,7 @@ public class ProductListPageController {
 
     private final int QUANTITY_LIMIT = 10;
 
-    private final int PAGE_LIMIT = 10;
+    private final int PAGE_LIMIT = 9;
 
     @Resource
     private ProductService productService;
@@ -38,6 +38,7 @@ public class ProductListPageController {
         model.addAttribute("pageLimit", productListAttributes.getPageLimit());
         model.addAttribute("startPage", productListAttributes.getStartPage());
         model.addAttribute("finalPage", productListAttributes.getFinalPage());
+        model.addAttribute("currentPage", productListAttributes.getCurrentPage());
         model.addAttribute("cartTotal", cartService.getCart().getTotal());
         return "productList";
     }

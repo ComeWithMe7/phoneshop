@@ -26,7 +26,7 @@ public class AjaxCartController {
         if (errors.hasErrors()) {
             ajaxResponse.setQuantityError("error");
         } else {
-            cartService.addPhone(cartItemUpdate.getId(), cartItemUpdate.getQuantity(), cart);
+            cartService.addPhone(cartItemUpdate.getId(), cartItemUpdate.getQuantity());
         }
         ajaxResponse.setTotal(cart.getTotal());
         return ajaxResponse;

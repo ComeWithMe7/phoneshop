@@ -16,6 +16,8 @@ public class ProductListAttributes {
 
     private Integer finalPage;
 
+    private Integer currentPage;
+
     public List<Phone> getPhones() {
         return phones;
     }
@@ -54,5 +56,13 @@ public class ProductListAttributes {
 
     public void setFinalPage(Integer finalPage) {
         this.finalPage = finalPage;
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 }
