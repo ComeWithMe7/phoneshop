@@ -1,10 +1,10 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
 import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
-import com.es.phoneshop.web.controller.pages.model.CartView;
+import com.es.phoneshop.web.controller.pages.model.UpdateCartData;
+import com.es.phoneshop.web.controller.pages.service.UpdateCartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class CartPageController {
+
     @Resource
     private CartService cartService;
 
+    @Resource
+    private UpdateCartService updateCartService;
+
     @RequestMapping(value = "/cart", method = RequestMethod.GET)
     public String getCart(Model model) {
-        model.addAttribute("cartView", setCartView());
+        model.addAttribute("cartView", updateCartService.setCartView());
         return "cart";
     }
 
@@ -34,9 +39,9 @@ public class CartPageController {
     }
 
     @RequestMapping(value = "/cart", method = RequestMethod.POST)
-    public String updateCart(Model model, @Valid CartView cartView, BindingResult bindingResult) {
+    public String updateCart(Model model, @Valid UpdateCartData cartView, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            setIncorrectCartView(cartView);
+            updateCartService.setIncorrectCartView(cartView);
             model.addAttribute("cartView", cartView);
             return "cart";
         }
@@ -46,28 +51,5 @@ public class CartPageController {
         }
         cartService.update(cartItems);
         return "redirect:/cart";
-    }
-
-    public CartView setCartView() {
-        Cart cart = cartService.getCart();
-        List<CartItemUpdate> cartItemUpdateList = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            cartItemUpdateList.add(new CartItemUpdate(cartItem.getQuantity(), cartItem.getPhone()));
-        }
-        return new CartView(cartItemUpdateList, cart.getTotal());
-    }
-
-    public void setIncorrectCartView(CartView cartView) {
-        Cart cart = cartService.getCart();
-        List<CartItemUpdate> cartItemUpdateList = cartView.getCartItems();
-        List<CartItemUpdate> cartItemUpdates = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            Optional<CartItemUpdate> optionalCartItemUpdate = cartItemUpdateList.stream()
-                    .filter(x -> x.getPhone().getId().equals(cartItem.getPhone().getId()))
-                    .findAny();
-            cartItemUpdates.add(new CartItemUpdate(optionalCartItemUpdate.get().getQuantity(), cartItem.getPhone()));
-        }
-        cartView.setCartItems(cartItemUpdates);
-        cartView.setTotal(cart.getTotal());
     }
 }

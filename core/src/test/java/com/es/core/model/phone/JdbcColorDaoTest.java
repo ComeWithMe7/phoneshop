@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -31,18 +30,6 @@ public class JdbcColorDaoTest {
         final long phoneId = 1001;
         Set<Color> colors = colorDao.get(phoneId);
         assertNotNull(colors);
-    }
-
-    @Rollback(true)
-    @Test
-    public void saveSetColorSetWithNewColorsByPhoneIdTest() {
-        final long phoneId = 1001;
-        int tableSizeBeforeInsert = getPhoneToColorCount();
-        Set<Color> colors = new HashSet<>();
-        colors.add(createNewColor());
-        colorDao.save(colors, phoneId);
-        int tableSizeAfterInsert = getPhoneToColorCount();
-        assertThat(tableSizeBeforeInsert, is(tableSizeAfterInsert - colors.size()));
     }
 
     @Rollback(true)

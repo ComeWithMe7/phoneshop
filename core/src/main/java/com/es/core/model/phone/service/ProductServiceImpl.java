@@ -50,10 +50,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Phone getPhone(long id) {
         Optional<Phone> phone = phoneDao.get(id);
-        if (phone.isPresent()) {
-            return phone.get();
-        } else {
-            throw new ProductNotFoundException("Product with id " + id + " wasn't founded");
-        }
+        return phone.orElseThrow(() -> new ProductNotFoundException());
     }
 }

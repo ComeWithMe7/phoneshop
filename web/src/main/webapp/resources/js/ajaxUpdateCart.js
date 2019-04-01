@@ -1,4 +1,4 @@
-function myFunction(phoneId) {
+function updateCart(phoneId) {
     var quantityx = "quantity" + phoneId;
     $.ajax({
         type: "POST",
@@ -12,17 +12,21 @@ function myFunction(phoneId) {
         success: function (data) {
             var receivedObject = data;
             $("#total").html("");
+            $("#count").html("");
             $("#quantityError" + phoneId).html("");
-            console.log(data);
             var text = document.createTextNode(receivedObject.total);
-            var text2 = document.createTextNode(receivedObject.quantityError);
             var domElement1 = document.getElementById('total');
             domElement1.appendChild(text);
+            var text3 = document.createTextNode(receivedObject.count);
+            var domElement3 = document.getElementById('count');
+            domElement3.appendChild(text3);
+        },
+        error: function (data) {
+            var receivedObject = data;
+            $("#quantityError" + phoneId).html("");
+            var text2 = document.createTextNode(receivedObject.quantityError);
             var domElement2 = document.getElementById('quantityError' + phoneId);
             domElement2.appendChild(text2);
-        },
-        error: function (result) {
-            console.log("ERROR: ", result);
         }
     });
 }

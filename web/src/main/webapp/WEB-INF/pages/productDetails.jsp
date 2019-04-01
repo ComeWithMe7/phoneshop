@@ -16,19 +16,21 @@
         <!-- JQuerry library -->
     </head>
     <body>
+    <div class="container">
         <p>
             <a href="<c:url value="/cart"/>">Cart</a>
         </p>
         <p>PhoneShop
             Total:
-        <div id="total"><label>${cartTotal}</label></div>
+        <div id="total"><label>${cartTotal}</label></div><br>
+        <div id="count"><label>${count}</label></div> Items
         </p>
         <p><a href="<c:url value="/productList"/>">Back to product list</a></p>
         <h1>${phone.model}</h1>
         <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
         <p>${phone.description}</p>
         <h3>Display</h3>
-        <table border="1px">
+        <table border="1px" class="table">
             <thead>
             <tr>
                 <td>Size</td>
@@ -46,7 +48,7 @@
         </table>
 
         <h3>Dimensions & weight</h3>
-        <table border="1px">
+        <table border="1px" class="table">
             <thead>
             <tr>
                 <td>Length</td>
@@ -62,7 +64,7 @@
         </table>
 
         <h3>Camera</h3>
-        <table border="1px">
+        <table border="1px" class="table">
             <thead>
             <tr>
                 <td>Front</td>
@@ -76,7 +78,7 @@
         </table>
 
         <h3>Battery</h3>
-        <table border="1px">
+        <table border="1px" class="table">
             <thead>
             <tr>
                 <td>TalkTime</td>
@@ -92,7 +94,7 @@
         </table>
 
         <h3>Other</h3>
-        <table border="1px">
+        <table border="1px" class="table">
             <thead>
             <tr>
                 <td>Colors</td>
@@ -112,9 +114,11 @@
         </table>
         <h2>Price: ${phone.price}</h2>
         <form>
-            <input id="quantity" value="1"/>
-            <div id="quantityError"></div>
-            <button type="button" onclick="myFunction(${phone.id})">Add to</button>
+            <input type="hidden" id="id" value="${phone.id}"/>
+            <input id="quantity${phone.id}" value="1"/>
+            <div id="quantityError${phone.id}"></div>
+            <button type="button" onclick="updateCart(${phone.id})">Add to</button>
         </form>
+    </div>
     </body>
 </html>

@@ -10,5 +10,11 @@ public interface CartService {
 
     void update(Set<CartItem> cartItems);
 
+    void update(Long phoneId, Long quantity);
+
     void remove(Long phoneId);
+
+    void cleanCart();
+
+    Long countProducts();
 }

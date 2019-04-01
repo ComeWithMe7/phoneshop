@@ -24,6 +24,7 @@ public class ProductDetailsPageController {
     public String showProductDetails(@PathVariable long phoneId, Model model) {
         model.addAttribute("cartTotal", cartService.getCart().getTotal());
         model.addAttribute("phone", productService.getPhone(phoneId));
+        model.addAttribute("count", cartService.countProducts());
         return "productDetails";
     }
 }

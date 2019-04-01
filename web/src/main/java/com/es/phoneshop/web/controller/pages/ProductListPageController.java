@@ -40,6 +40,7 @@ public class ProductListPageController {
         model.addAttribute("finalPage", productListAttributes.getFinalPage());
         model.addAttribute("currentPage", productListAttributes.getCurrentPage());
         model.addAttribute("cartTotal", cartService.getCart().getTotal());
+        model.addAttribute("count", cartService.countProducts());
         return "productList";
     }
 }

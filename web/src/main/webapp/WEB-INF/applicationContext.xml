@@ -11,6 +11,11 @@
     <import resource="classpath:context/applicationContext-demoda.xml"/>
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="errors"/>
+        <property name="basenames">
+            <list>
+                <value>errors</value>
+                <value>application</value>
+            </list>
+        </property>
     </bean>
 </beans>

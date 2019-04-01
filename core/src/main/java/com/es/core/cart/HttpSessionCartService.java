@@ -56,15 +56,32 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public void update(Long phoneId, Long quantity) {
+        Optional<CartItem> cartItem = cart.getCartItems().stream()
+                .filter(x -> x.getPhone().getId().equals(phoneId))
+                .findAny();
+        cartItem.ifPresent(cartItem1 -> cartItem1.setQuantity(quantity));
+        countTotal();
+    }
+
+    @Override
     public void remove(Long phoneId) {
         Set<CartItem> cartItems = cart.getCartItems();
-        Optional<CartItem> cartItem = cartItems.stream()
-                .filter(x -> phoneId.equals(x.getPhone().getId()))
-                .findAny();
-        if (cartItem.isPresent()) {
-            cartItems.removeIf(x -> x.getPhone().getId().equals(phoneId));
-            countTotal();
-        }
+        cartItems.removeIf(x -> x.getPhone().getId().equals(phoneId));
+        countTotal();
+    }
+
+    @Override
+    public void cleanCart() {
+        cart.setTotal(BigDecimal.ZERO);
+        cart.setCartItems(new HashSet<>());
+    }
+
+    @Override
+    public Long countProducts() {
+        return cart.getCartItems().stream()
+                .mapToLong(CartItem::getQuantity)
+                .sum();
     }
 
     public void countTotal() {

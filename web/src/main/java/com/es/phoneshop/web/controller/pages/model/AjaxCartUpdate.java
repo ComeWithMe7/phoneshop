@@ -3,8 +3,12 @@ package com.es.phoneshop.web.controller.pages.model;
 import java.math.BigDecimal;
 
 public class AjaxCartUpdate {
+
     private BigDecimal total;
+
     private String quantityError;
+
+    private Long count;
 
     public AjaxCartUpdate() {
     }
@@ -28,5 +32,13 @@ public class AjaxCartUpdate {
 
     public void setQuantityError(String quantityError) {
         this.quantityError = quantityError;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

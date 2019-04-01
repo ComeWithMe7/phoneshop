@@ -5,19 +5,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartView {
+public class UpdateCartData {
 
     @Valid
     private List<CartItemUpdate> cartItems;
 
     private BigDecimal total;
 
-    public CartView() {
+    public UpdateCartData() {
         cartItems = new ArrayList<>();
         total = BigDecimal.ZERO;
     }
 
-    public CartView(List<CartItemUpdate> cartItems, BigDecimal total) {
+    public UpdateCartData(List<CartItemUpdate> cartItems, BigDecimal total) {
         this.cartItems = cartItems;
         this.total = total;
     }
@@ -37,4 +37,5 @@ public class CartView {
     public void setCartItems(List<CartItemUpdate> cartItems) {
         this.cartItems = cartItems;
     }
+
 }
