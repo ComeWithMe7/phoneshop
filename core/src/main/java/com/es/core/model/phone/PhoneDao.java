@@ -13,5 +13,4 @@ public interface PhoneDao {
     public ProductListAttributes findByTemplateAndSort(String template, String sortParam, String gradation, int offset, int limit);
     public Long getStock(Long key);
     public void updateStock(Long key, Long updatedStock);
-    public Optional<Phone> getByOrderItem(Long orderItemId);
 }

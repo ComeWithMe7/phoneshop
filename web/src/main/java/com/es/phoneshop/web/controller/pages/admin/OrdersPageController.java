@@ -1,9 +1,43 @@
 package com.es.phoneshop.web.controller.pages.admin;
 
+import com.es.core.model.order.OrderStatus;
+import com.es.core.order.OrderNotFoundException;
+import com.es.core.order.OrderService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 @Controller
 @RequestMapping(value = "/admin/orders")
 public class OrdersPageController {
+
+    @Resource
+    private OrderService orderService;
+
+    @GetMapping
+    public String getOrders(Model model) {
+        model.addAttribute("orders", orderService.findAll());
+        return "orders";
+    }
+
+    @GetMapping(value = "/{orderId}")
+    public String getOrder(@PathVariable Long orderId, Model model) {
+        model.addAttribute("order", orderService.getOrderById(orderId));
+        return "adminOrderOverview";
+    }
+
+    @PostMapping(value = "/{orderId}")
+    public String update(@PathVariable Long orderId, Model model, @RequestParam(name = "status") String status) {
+        OrderStatus orderStatus = OrderStatus.valueOf(status);
+        orderService.updateStatus(orderId, orderStatus);
+        return "redirect:/admin/orders/" + orderId;
+    }
+
+    @ResponseStatus(value= HttpStatus.CONFLICT,
+            reason="Order with such Id wasn't founded")
+    @ExceptionHandler(OrderNotFoundException.class)
+    public void orderNotFound() {    }
 }

@@ -1,5 +1,7 @@
 package com.es.phoneshop.web.controller.pages.model;
 
+import com.es.core.cart.Cart;
+
 import java.math.BigDecimal;
 
 public class AjaxCartUpdate {
@@ -40,5 +42,18 @@ public class AjaxCartUpdate {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public static AjaxCartUpdate createAjaxCartUpdate(Cart cart) {
+        AjaxCartUpdate ajaxResponse = new AjaxCartUpdate();
+        ajaxResponse.setTotal(cart.getTotal());
+        ajaxResponse.setCount(cart.getProductsNumber());
+        return ajaxResponse;
+    }
+
+    public static AjaxCartUpdate createAjaxCartUpdateWithError(Cart cart, String errorMessage) {
+        AjaxCartUpdate ajaxResponse = createAjaxCartUpdate(cart);
+        ajaxResponse.setQuantityError(errorMessage);
+        return ajaxResponse;
     }
 }

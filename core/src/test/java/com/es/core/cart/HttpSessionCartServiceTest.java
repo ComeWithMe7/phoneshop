@@ -38,6 +38,8 @@ public class HttpSessionCartServiceTest {
 
     @Before
     public void setup() {
+        cartService = new HttpSessionCartService();
+
         when(cartItem1.getPhone()).thenReturn(phone1);
         when(cartItem2.getPhone()).thenReturn(phone2);
         when(cartItem1.getQuantity()).thenReturn(1L);
@@ -50,7 +52,6 @@ public class HttpSessionCartServiceTest {
         cartItems.add(cartItem1);
         cartItems.add(cartItem2);
         cart.setCartItems(cartItems);
-        cartService = new HttpSessionCartService();
         cartService.setCart(cart);
     }
 

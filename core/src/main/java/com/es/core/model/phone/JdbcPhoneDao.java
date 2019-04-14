@@ -34,8 +34,6 @@ public class JdbcPhoneDao implements PhoneDao{
 
     private String SQL_GET_BY_ID = "select * from phones where id = :id";
 
-    private String SQL_GET_BY_ORDER_ITEM_ID = "select * from phones join orderItem on phones.id = orderItem.phoneId where orderItem.id = :id";
-
     private String SQL_SAVE_PHONE = "insert into phones (brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm," +
             "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, frontCameraMegapixels," +
             "ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, description) " +
@@ -82,23 +80,23 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     public ProductListAttributes findAll(int offset, int limit) {
-        List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+        List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
         return setProperties(phones);
     }
 
     public ProductListAttributes findByTemplate(String template, int offset, int limit) {
         template = template.toLowerCase();
-        List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+        List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
         return setPropertiesWithTemplate(phones, template);
     }
 
     public ProductListAttributes findAllAndSort(String sortParam, String gradation, int offset, int limit) {
         sortParam = sortParams.get(sortParam);
         if (DOWN_SORT.equals(gradation) && sortParam != null) {
-            List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " order by " + sortParam + " desc" + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+            List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " order by " + sortParam + " desc" + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
             return setProperties(phones);
         } else if (UP_SORT.equals(gradation) && sortParam != null) {
-            List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " order by " + sortParam + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+            List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " order by " + sortParam + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
             return setProperties(phones);
         } else {
             return findAll(offset, limit);
@@ -109,10 +107,10 @@ public class JdbcPhoneDao implements PhoneDao{
         sortParam = sortParams.get(sortParam);
         template = template.toLowerCase();
         if (DOWN_SORT.equals(gradation) && sortParam != null) {
-            List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' order by " + sortParam + " desc" + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+            List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' order by " + sortParam + " desc" + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
             return setPropertiesWithTemplate(phones, template);
         } else if (UP_SORT.equals(gradation) && sortParam != null) {
-            List<Phone> phones = (List<Phone>) namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' order by " + sortParam + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+            List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_TEMPLATE + " and LOWER (model) like '%" + template + "%' order by " + sortParam + " offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
             return setPropertiesWithTemplate(phones, template);
         } else {
             return findAll(offset, limit);
@@ -133,23 +131,6 @@ public class JdbcPhoneDao implements PhoneDao{
         namedParameterJdbcTemplate.update(SQL_UPDATE_STOCK, namedParameters);
     }
 
-    @Override
-    public Optional<Phone> getByOrderItem(Long orderItemId) {
-        SqlParameterSource namedParameters = new MapSqlParameterSource("id", orderItemId);
-        try {
-            Phone phone = (Phone) namedParameterJdbcTemplate.queryForObject(SQL_GET_BY_ORDER_ITEM_ID, namedParameters, new BeanPropertyRowMapper(Phone.class));
-            phone.setColors(colorDao.get(orderItemId));
-            return Optional.of(phone);
-        } catch (DataAccessException ex) {
-            return Optional.empty();
-        }
-    }
-
-    private void setColors(List<Phone> phones) {
-        for (Phone phone : phones) {
-            phone.setColors(colorDao.get(phone.getId()));
-        }
-    }
 
     private Integer selectCount() {
         return namedParameterJdbcTemplate.getJdbcOperations().queryForObject(SQL_SELECT_COUNT_TEMPLATE, Integer.class);

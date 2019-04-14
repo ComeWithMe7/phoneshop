@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
 <html>
 <head>
@@ -15,6 +16,7 @@
         <p>PhoneShop</p>
         <h2>Thank you for your order</h2><br>
         <h2>Order number: ${order.id}</h2>
+        <h2>${order.status}</h2>
         <table border="1px" class="table">
             <thead>
             <tr>
@@ -44,7 +46,8 @@
                         ${order.orderItems[status.index].phone.displaySizeInches}"
                     </td>
                     <td>
-                        $ ${order.orderItems[status.index].phone.price}
+                        <fmt:formatNumber value="${order.orderItems[status.index].phone.price}" type="currency"
+                                          currencyCode="USD"/>
                     </td>
                     <td>
                         ${order.orderItems[status.index].quantity}

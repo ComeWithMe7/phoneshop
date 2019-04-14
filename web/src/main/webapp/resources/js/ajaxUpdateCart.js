@@ -22,9 +22,10 @@ function updateCart(phoneId) {
             domElement3.appendChild(text3);
         },
         error: function (data) {
-            var receivedObject = data;
+            console.log(data);
+            var receivedObject1 = data.responseJSON;
             $("#quantityError" + phoneId).html("");
-            var text2 = document.createTextNode(receivedObject.quantityError);
+            var text2 = document.createTextNode(receivedObject1.quantityError);
             var domElement2 = document.getElementById('quantityError' + phoneId);
             domElement2.appendChild(text2);
         }

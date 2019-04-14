@@ -1,8 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.order.OrderService;
-import com.es.core.order.PlaceOrder;
+import com.es.core.cart.Cart;
+import com.es.core.cart.CartService;
 import com.es.phoneshop.web.controller.pages.model.OrderView;
+import com.es.phoneshop.web.controller.pages.service.OrderValidator;
 import com.es.phoneshop.web.controller.pages.service.OrderViewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,32 +19,30 @@ import javax.validation.Valid;
 public class OrderPageController {
 
     @Resource
-    private OrderService orderService;
+    private OrderViewService orderViewService;
 
     @Resource
-    private OrderViewService orderViewService;
+    private CartService cartService;
+
+    @Resource
+    private OrderValidator orderValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String getOrder(Model model) {
-        model.addAttribute("orderView", orderViewService.setOrderView());
+        model.addAttribute("orderView", OrderView.setOrderView(cartService.getCart()));
         return "order";
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String placeOrder(Model model, @Valid OrderView orderView, BindingResult bindingResult) {
+        Cart cart = cartService.getCart();
+        orderValidator.validate(orderView, bindingResult);
         if (bindingResult.hasErrors()) {
-            orderViewService.setOrderViewWithErrors(orderView);
             model.addAttribute("orderView", orderView);
             return "order";
         } else {
-            PlaceOrder placeOrder = orderService.placeOrder(orderView.getFirstName(), orderView.getLastName(), orderView.getAddress(), orderView.getPhoneNumber(), orderView.getInformation());
-            if (placeOrder.isSuccessful()) {
-                return "redirect:/orderOverview/" + placeOrder.getHash();
-            } else {
-                model.addAttribute("orderView", orderViewService.setOrderView());
-                model.addAttribute("removedProducts", placeOrder.getRemovedProducts());
-                return "order";
-            }
+            String hash = orderViewService.createOrder(orderView);
+            return "redirect:/orderOverview/" + hash;
         }
     }
 }

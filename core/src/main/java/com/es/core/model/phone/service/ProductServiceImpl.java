@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Resource
     private PhoneDao phoneDao;
 
@@ -50,6 +51,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Phone getPhone(long id) {
         Optional<Phone> phone = phoneDao.get(id);
-        return phone.orElseThrow(() -> new ProductNotFoundException());
+        return phone.orElseThrow(ProductNotFoundException::new);
     }
 }

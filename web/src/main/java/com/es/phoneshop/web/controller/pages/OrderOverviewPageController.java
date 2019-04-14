@@ -1,11 +1,11 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.order.OrderNotFoundException;
 import com.es.core.order.OrderService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -17,7 +17,14 @@ public class OrderOverviewPageController {
 
     @RequestMapping(value = "/orderOverview/{hash}",method = RequestMethod.GET)
     public String getOrder(@PathVariable String hash, Model model) {
-        model.addAttribute("order", orderService.getOrder(hash));
+        model.addAttribute("order", orderService.getOrderByHash(hash));
         return "orderOverview";
+    }
+
+    @ResponseStatus(value= HttpStatus.CONFLICT,
+            reason="Order with such hash code wasn't founded")
+    @ExceptionHandler(OrderNotFoundException.class)
+    public void orderNotFound() {
+
     }
 }

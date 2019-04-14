@@ -1,12 +1,12 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.CartService;
+import com.es.core.model.phone.service.ProductNotFoundException;
 import com.es.core.model.phone.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -24,7 +24,14 @@ public class ProductDetailsPageController {
     public String showProductDetails(@PathVariable long phoneId, Model model) {
         model.addAttribute("cartTotal", cartService.getCart().getTotal());
         model.addAttribute("phone", productService.getPhone(phoneId));
-        model.addAttribute("count", cartService.countProducts());
+        model.addAttribute("count", cartService.getCart().getProductsNumber());
         return "productDetails";
+    }
+
+    @ResponseStatus(value= HttpStatus.CONFLICT,
+            reason="Product with such id wasn't founded")
+    @ExceptionHandler(ProductNotFoundException.class)
+    public void productNotFound() {
+
     }
 }

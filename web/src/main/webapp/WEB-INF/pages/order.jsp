@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 
+<jsp:useBean id="cart" type="com.es.core.cart.Cart" scope="request"/>
+
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -25,38 +27,34 @@
             <td>Model</td>
             <td>Color</td>
             <td>Display size</td>
-            <td>Price</td>
             <td>Quantity</td>
             <td>Price</td>
         </tr>
         </thead>
-        <c:forEach var="index" begin="0" varStatus="status" end="${orderView.cartItemUpdates.size() - 1}">
+        <c:forEach var="index" begin="0" varStatus="status" end="${cart.cartItems.size() - 1}">
             <tr>
                 <td>
-                    ${orderView.cartItemUpdates[status.index].phone.brand}
+                    ${cart.cartItems[status.index].phone.brand}
                 </td>
                 <td>
-                    <a href="<c:url value="productDetails/${orderView.cartItemUpdates[status.index].phone.id}"/>">${orderView.cartItemUpdates[status.index].phone.model}</a>
+                    <a href="<c:url value="productDetails/${cart.cartItems[status.index].phone.id}"/>">${cart.cartItems[status.index].phone.model}</a>
                 </td>
                 <td>
-                    <c:forEach var="color" items="${orderView.cartItemUpdates[status.index].phone.colors}" varStatus="colorIndex">
+                    <c:forEach var="color" items="${cart.cartItems[status.index].phone.colors}" varStatus="colorIndex">
                         ${color.code} <br>
                     </c:forEach>
                 </td>
                 <td>
-                        ${orderView.cartItemUpdates[status.index].phone.displaySizeInches}"
+                        ${cart.cartItems[status.index].phone.displaySizeInches}"
                 </td>
                 <td>
-                    $ ${orderView.cartItemUpdates[status.index].phone.price}
-                </td>
-                <td>
-                    ${removedProducts.get(orderView.cartItemUpdates[status.index].phone.id)}<br>
-                    <sf:hidden path="cartItemUpdates[${status.index}].phone.id"/>
+                    <sf:hidden path="cartItemUpdates[${status.index}].id"/>
                     <sf:hidden path="cartItemUpdates[${status.index}].quantity"/>
-                    ${orderView.cartItemUpdates[status.index].quantity}
+                    <sf:errors path="cartItemUpdates[${status.index}].quantity"/><br>
+                    ${cart.cartItems[status.index].quantity}
                 </td>
                 <td>
-                    ${orderView.cartItemUpdates[status.index].phone.price}$
+                    ${cart.cartItems[status.index].phone.price}$
                 </td>
             </tr>
         </c:forEach>

@@ -3,55 +3,51 @@ package com.es.phoneshop.web.controller.pages.service;
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
-import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
+import com.es.core.order.OrderService;
 import com.es.phoneshop.web.controller.pages.model.OrderView;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderViewService {
 
     @Resource
-    private CartService cartService;
+    private OrderService orderService;
 
     @Resource
-    private MessageSource messageSource;
+    private CartService cartService;
 
-    public OrderView setOrderView() {
-        OrderView orderView = new OrderView();
+    public String createOrder(OrderView orderView) {
+        Order order = new Order();
         Cart cart = cartService.getCart();
-        List<CartItemUpdate> cartItemUpdateList = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            cartItemUpdateList.add(new CartItemUpdate(cartItem.getQuantity(), cartItem.getPhone()));
-        }
-        orderView.setCartItemUpdates(cartItemUpdateList);
-        orderView.setSubtotal(cart.getTotal());
-        orderView.setDelivery(BigDecimal.valueOf(Double.parseDouble(messageSource.getMessage("delivery.price", null, Locale.getDefault()))));
-        orderView.setTotal(orderView.getSubtotal().add(orderView.getDelivery()));
-        return orderView;
-    }
+        order.setFirstName(orderView.getFirstName());
+        order.setLastName(orderView.getLastName());
+        order.setDeliveryAddress(orderView.getAddress());
+        order.setContactPhoneNo(orderView.getPhoneNumber());
+        order.setInformation(orderView.getInformation());
+        order.setHash(UUID.randomUUID().toString());
+        order.setStatus(OrderStatus.NEW);
+        //order.setSubtotal(cart.getTotal());
+        //order.setDeliveryPrice(orderView.getDelivery());
+        //order.setTotalPrice(cart.getTotal().add(deliveryPrice));
 
-    public void setOrderViewWithErrors(OrderView orderView) {
-        Cart cart = cartService.getCart();
-        List<CartItemUpdate> cartItemUpdateList = orderView.getCartItemUpdates();
-        List<CartItemUpdate> cartItemUpdates = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cart.getCartItems()) {
-            Optional<CartItemUpdate> optionalCartItemUpdate = cartItemUpdateList.stream()
-                    .filter(x -> x.getPhone().getId().equals(cartItem.getPhone().getId()))
-                    .findAny();
-            cartItemUpdates.add(new CartItemUpdate(optionalCartItemUpdate.get().getQuantity(), cartItem.getPhone()));
+            OrderItem orderItem = new OrderItem();
+            orderItem.setPhone(cartItem.getPhone());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItems.add(orderItem);
         }
-        orderView.setCartItemUpdates(cartItemUpdates);
-        orderView.setSubtotal(cart.getTotal());
-        orderView.setDelivery(BigDecimal.valueOf(Double.parseDouble(messageSource.getMessage("delivery.price", null, Locale.getDefault()))));
-        orderView.setTotal(orderView.getSubtotal().add(orderView.getDelivery()));
-    }
+        order.setOrderItems(orderItems);
 
+        orderService.placeOrder(order);
+        return order.getHash();
+    }
 }

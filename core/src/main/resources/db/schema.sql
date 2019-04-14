@@ -68,6 +68,7 @@ create table orders (
   deliveryPrice FLOAT,
   totalPrice FLOAT,
   hash VARCHAR(255),
+  status VARCHAR (255),
   unique (hash)
 );
 

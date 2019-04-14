@@ -5,23 +5,25 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component("cart")
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS )
 public class Cart {
 
-    private Set<CartItem> cartItems;
+    private List<CartItem> cartItems;
 
     private BigDecimal total;
 
+    private Long productsNumber;
+
     public Cart() {
-        cartItems = new HashSet<>();
+        cartItems = new ArrayList<>();
         total = BigDecimal.ZERO;
     }
 
-    public Cart(Set<CartItem> cartItems, BigDecimal total) {
+    public Cart(List<CartItem> cartItems, BigDecimal total) {
         this.cartItems = cartItems;
         this.total = total;
     }
@@ -34,11 +36,19 @@ public class Cart {
         this.total = total;
     }
 
-    public Set<CartItem> getCartItems() {
+    public List<CartItem> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItems(Set<CartItem> cartItems) {
+    public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public Long getProductsNumber() {
+        return productsNumber;
+    }
+
+    public void setProductsNumber(Long productsNumber) {
+        this.productsNumber = productsNumber;
     }
 }

@@ -1,7 +1,8 @@
 package com.es.phoneshop.web.controller.pages.model;
 
+import com.es.core.cart.Cart;
+
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,24 +11,12 @@ public class UpdateCartData {
     @Valid
     private List<CartItemUpdate> cartItems;
 
-    private BigDecimal total;
-
     public UpdateCartData() {
         cartItems = new ArrayList<>();
-        total = BigDecimal.ZERO;
     }
 
-    public UpdateCartData(List<CartItemUpdate> cartItems, BigDecimal total) {
+    public UpdateCartData(List<CartItemUpdate> cartItems) {
         this.cartItems = cartItems;
-        this.total = total;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
     }
 
     public List<CartItemUpdate> getCartItems() {
@@ -36,6 +25,12 @@ public class UpdateCartData {
 
     public void setCartItems(List<CartItemUpdate> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public static UpdateCartData setCartView(Cart cart) {
+        List<CartItemUpdate> cartItemUpdateList = new ArrayList<>();
+        cart.getCartItems().forEach(x -> cartItemUpdateList.add(new CartItemUpdate(x.getPhone().getId(), x.getQuantity())));
+        return new UpdateCartData(cartItemUpdateList);
     }
 
 }
