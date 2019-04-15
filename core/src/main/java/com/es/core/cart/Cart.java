@@ -13,7 +13,18 @@ import java.util.Set;
 public class Cart {
 
     private Set<CartItem> cartItems;
+
     private BigDecimal total;
+
+    public Cart() {
+        cartItems = new HashSet<>();
+        total = BigDecimal.ZERO;
+    }
+
+    public Cart(Set<CartItem> cartItems, BigDecimal total) {
+        this.cartItems = cartItems;
+        this.total = total;
+    }
 
     public BigDecimal getTotal() {
         return total;
@@ -21,11 +32,6 @@ public class Cart {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
-    }
-
-    public Cart() {
-        cartItems = new HashSet<>();
-        total = BigDecimal.ZERO;
     }
 
     public Set<CartItem> getCartItems() {

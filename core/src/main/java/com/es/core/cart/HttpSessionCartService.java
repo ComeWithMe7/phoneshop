@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity, Cart cart) {
+    public void addPhone(Long phoneId, Long quantity) {
         Set<CartItem> cartItems = cart.getCartItems();
         Optional<CartItem> cartItem = cartItems.stream()
                 .filter(x -> phoneId.equals(x.getPhone().getId()))
@@ -31,23 +31,71 @@ public class HttpSessionCartService implements CartService {
         if (cartItem.isPresent() && cartItem.get().getPhone().getPrice() != null) {
             CartItem existingCartItem = cartItem.get();
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-            cart.setTotal(cart.getTotal().add(existingCartItem.getPhone().getPrice().multiply(BigDecimal.valueOf(quantity))));
+            countTotal();
         } else {
             Optional<Phone> phone = phoneDao.get(phoneId);
             if (phone.isPresent() && phone.get().getPrice() != null) {
                 cartItems.add(new CartItem(phone.get(), quantity));
-                cart.setTotal(cart.getTotal().add(phone.get().getPrice().multiply(BigDecimal.valueOf(quantity))));
+                countTotal();
             }
         }
     }
 
     @Override
-    public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+    public void update(Set<CartItem> cartItems) {
+        Set<CartItem> newCartItems = new HashSet<>();
+        Set<CartItem> cartCartItems = cart.getCartItems();
+        for (CartItem cartItem : cartItems) {
+            Optional<CartItem> optionalCartItem = cartCartItems.stream()
+                    .filter(x -> x.getPhone().getId().equals(cartItem.getPhone().getId()))
+                    .findAny();
+            optionalCartItem.ifPresent(cartItem1 -> newCartItems.add(new CartItem(cartItem1.getPhone(), cartItem.getQuantity())));
+        }
+        cart.setCartItems(newCartItems);
+        countTotal();
+    }
+
+    @Override
+    public void update(Long phoneId, Long quantity) {
+        Optional<CartItem> cartItem = cart.getCartItems().stream()
+                .filter(x -> x.getPhone().getId().equals(phoneId))
+                .findAny();
+        cartItem.ifPresent(cartItem1 -> cartItem1.setQuantity(quantity));
+        countTotal();
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        Set<CartItem> cartItems = cart.getCartItems();
+        cartItems.removeIf(x -> x.getPhone().getId().equals(phoneId));
+        countTotal();
+    }
+
+    @Override
+    public void cleanCart() {
+        cart.setTotal(BigDecimal.ZERO);
+        cart.setCartItems(new HashSet<>());
+    }
+
+    @Override
+    public Long countProducts() {
+        return cart.getCartItems().stream()
+                .mapToLong(CartItem::getQuantity)
+                .sum();
+    }
+
+    public void countTotal() {
+        Set<CartItem> cartItems = cart.getCartItems();
+        BigDecimal total = BigDecimal.ZERO;
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getPhone().getPrice() != null) {
+                total = total.add(cartItem.getPhone().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+            }
+        }
+        cart.setTotal(total);
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

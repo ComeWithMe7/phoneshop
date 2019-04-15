@@ -1,14 +1,20 @@
 package com.es.core.cart;
 
-import java.util.Map;
+import java.util.Set;
 
 public interface CartService {
 
     Cart getCart();
 
-    void addPhone(Long phoneId, Long quantity, Cart cart);
+    void addPhone(Long phoneId, Long quantity);
 
-    void update(Map<Long, Long> items);
+    void update(Set<CartItem> cartItems);
+
+    void update(Long phoneId, Long quantity);
 
     void remove(Long phoneId);
+
+    void cleanCart();
+
+    Long countProducts();
 }

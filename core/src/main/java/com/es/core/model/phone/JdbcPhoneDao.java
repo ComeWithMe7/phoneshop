@@ -34,6 +34,8 @@ public class JdbcPhoneDao implements PhoneDao{
 
     private String SQL_GET_BY_ID = "select * from phones where id = :id";
 
+    private String SQL_GET_BY_ORDER_ITEM_ID = "select * from phones join orderItem on phones.id = orderItem.phoneId where orderItem.id = :id";
+
     private String SQL_SAVE_PHONE = "insert into phones (brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm," +
             "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, frontCameraMegapixels," +
             "ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, description) " +
@@ -44,6 +46,10 @@ public class JdbcPhoneDao implements PhoneDao{
     private String SQL_FIND_TEMPLATE = "select * from phones join stocks on phones.id = stocks.phoneId where stock > 0";
 
     private String SQL_SELECT_COUNT_TEMPLATE = "select count(*) from phones join stocks on phones.id = stocks.phoneId where stock > 0";
+
+    private String SQL_GET_STOCK = "select stock from stocks where phoneId = :phoneId";
+
+    private String SQL_UPDATE_STOCK = "update stocks set stock = :stock where phoneId = :phoneId";
 
     private Map<String, String> sortParams;
 
@@ -110,6 +116,32 @@ public class JdbcPhoneDao implements PhoneDao{
             return setPropertiesWithTemplate(phones, template);
         } else {
             return findAll(offset, limit);
+        }
+    }
+
+    @Override
+    public Long getStock(final Long key) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("phoneId", key);
+        return namedParameterJdbcTemplate.queryForObject(SQL_GET_STOCK, namedParameters, Long.class);
+    }
+
+    @Override
+    public void updateStock(Long key, Long updatedStock) {
+        Map<String, Long> namedParameters = new HashMap<>(2);
+        namedParameters.put("phoneId", key);
+        namedParameters.put("stock", updatedStock);
+        namedParameterJdbcTemplate.update(SQL_UPDATE_STOCK, namedParameters);
+    }
+
+    @Override
+    public Optional<Phone> getByOrderItem(Long orderItemId) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", orderItemId);
+        try {
+            Phone phone = (Phone) namedParameterJdbcTemplate.queryForObject(SQL_GET_BY_ORDER_ITEM_ID, namedParameters, new BeanPropertyRowMapper(Phone.class));
+            phone.setColors(colorDao.get(orderItemId));
+            return Optional.of(phone);
+        } catch (DataAccessException ex) {
+            return Optional.empty();
         }
     }
 

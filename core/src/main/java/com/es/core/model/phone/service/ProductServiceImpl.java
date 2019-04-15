@@ -1,9 +1,11 @@
 package com.es.core.model.phone.service;
 
+import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -24,14 +26,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductListAttributes setPages(ProductListAttributes productListAttributes, Integer pageNumber, int limitQuantity, int limitPages) {
-        if (Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity) > (Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages) {
-            productListAttributes.setPageLimit((int) ((Math.floor(pageNumber.doubleValue() / limitPages) + 1) * limitPages));
-            productListAttributes.setStartPage((int) ((double) productListAttributes.getPageLimit() / limitPages - 1) * 10 + 1);
+        Integer phonesQuantity = productListAttributes.getPhonesQuantity();
+        Integer finalPage = (int) Math.ceil((double) phonesQuantity / limitQuantity);
+        productListAttributes.setFinalPage(finalPage);
+        if (pageNumber > limitPages / 2) {
+            productListAttributes.setStartPage(pageNumber - limitPages / 2);
         } else {
-            productListAttributes.setPageLimit((int) Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity));
-            productListAttributes.setStartPage((int) (Math.floor(pageNumber.doubleValue() / limitPages) * limitPages + 1));
+            productListAttributes.setStartPage(1);
         }
-        productListAttributes.setFinalPage((int) Math.ceil((double) productListAttributes.getPhonesQuantity() / limitQuantity));
+        if (pageNumber < finalPage - limitPages / 2) {
+            if (pageNumber <= limitPages / 2) {
+                productListAttributes.setPageLimit(limitPages);
+            }else {
+                productListAttributes.setPageLimit(pageNumber + limitPages / 2);
+            }
+        } else {
+            productListAttributes.setPageLimit(finalPage);
+        }
+        productListAttributes.setCurrentPage(pageNumber);
         return productListAttributes;
+    }
+
+    @Override
+    public Phone getPhone(long id) {
+        Optional<Phone> phone = phoneDao.get(id);
+        return phone.orElseThrow(() -> new ProductNotFoundException());
     }
 }
