@@ -86,7 +86,7 @@ public class HttpSessionCartService implements CartService {
                 .sum());
     }
 
-    private void countTotal() {
+    public void countTotal() {
         List<CartItem> cartItems = cart.getCartItems();
         BigDecimal total = cartItems.stream()
                 .reduce(BigDecimal.ZERO,
