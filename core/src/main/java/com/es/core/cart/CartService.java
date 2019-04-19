@@ -1,6 +1,6 @@
 package com.es.core.cart;
 
-import java.util.Set;
+import java.util.Map;
 
 public interface CartService {
 
@@ -8,13 +8,11 @@ public interface CartService {
 
     void addPhone(Long phoneId, Long quantity);
 
-    void update(Set<CartItem> cartItems);
+    void update(Map<Long, Long> cartItems);
 
     void update(Long phoneId, Long quantity);
 
     void remove(Long phoneId);
 
     void cleanCart();
-
-    Long countProducts();
 }

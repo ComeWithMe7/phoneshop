@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -112,7 +113,8 @@
                 <td>${phone.bluetooth}</td>
             </tr>
         </table>
-        <h2>Price: ${phone.price}</h2>
+        <h2>Price: <fmt:formatNumber value="${phone.price}" type="currency"
+                                     currencyCode="USD"/></h2>
         <form>
             <input type="hidden" id="id" value="${phone.id}"/>
             <input id="quantity${phone.id}" value="1"/>

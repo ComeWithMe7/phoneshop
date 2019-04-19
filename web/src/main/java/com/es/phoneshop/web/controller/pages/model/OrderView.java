@@ -1,41 +1,43 @@
 package com.es.phoneshop.web.controller.pages.model;
 
+import com.es.core.cart.Cart;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderView {
 
     @Valid
-    List<CartItemUpdate> cartItemUpdates;
+    private List<CartItemUpdate> cartItemUpdates;
 
-    BigDecimal subtotal;
+    private BigDecimal subtotal;
 
-    BigDecimal delivery;
+    private BigDecimal delivery;
 
-    BigDecimal total;
-
-    @NotEmpty
-    @Size(max = 250)
-    String firstName;
+    private BigDecimal total;
 
     @NotEmpty
     @Size(max = 250)
-    String lastName;
+    private String firstName;
 
     @NotEmpty
     @Size(max = 250)
-    String address;
+    private String lastName;
+
+    @NotEmpty
+    @Size(max = 250)
+    private String address;
 
     @Pattern(regexp="(\\+[0-9]{12})", message = "Must be in format +375001111111")
-    String phoneNumber;
+    private String phoneNumber;
 
     @Size(max = 4050)
-    String information;
+    private String information;
 
     public List<CartItemUpdate> getCartItemUpdates() {
         return cartItemUpdates;
@@ -108,4 +110,13 @@ public class OrderView {
     public void setInformation(String information) {
         this.information = information;
     }
+
+    public static OrderView setOrderView(Cart cart) {
+        OrderView orderView = new OrderView();
+        List<CartItemUpdate> cartItemUpdateList = new ArrayList<>();
+        cart.getCartItems().forEach(x -> cartItemUpdateList.add(new CartItemUpdate(x.getPhone().getId(), x.getQuantity())));
+        orderView.setCartItemUpdates(cartItemUpdateList);
+        return orderView;
+    }
+
 }

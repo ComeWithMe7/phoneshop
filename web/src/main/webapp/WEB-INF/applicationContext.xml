@@ -6,6 +6,14 @@
 
     <context:component-scan base-package="com.es.phoneshop.web.controller.pages.model" />
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
 
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
@@ -14,8 +22,8 @@
         <property name="basenames">
             <list>
                 <value>errors</value>
-                <value>application</value>
             </list>
         </property>
     </bean>
+
 </beans>

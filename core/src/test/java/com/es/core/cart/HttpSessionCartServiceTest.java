@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -21,8 +21,6 @@ public class HttpSessionCartServiceTest {
     private HttpSessionCartService cartService;
 
     private Cart cart;
-
-    private Set<CartItem> cartItems;
 
     @Mock
     private CartItem cartItem1;
@@ -38,6 +36,8 @@ public class HttpSessionCartServiceTest {
 
     @Before
     public void setup() {
+        cartService = new HttpSessionCartService();
+
         when(cartItem1.getPhone()).thenReturn(phone1);
         when(cartItem2.getPhone()).thenReturn(phone2);
         when(cartItem1.getQuantity()).thenReturn(1L);
@@ -46,11 +46,10 @@ public class HttpSessionCartServiceTest {
         when(phone2.getPrice()).thenReturn(BigDecimal.valueOf(100));
 
         cart = new Cart();
-        cartItems = new HashSet<>();
+        List<CartItem> cartItems = new ArrayList<>();
         cartItems.add(cartItem1);
         cartItems.add(cartItem2);
         cart.setCartItems(cartItems);
-        cartService = new HttpSessionCartService();
         cartService.setCart(cart);
     }
 

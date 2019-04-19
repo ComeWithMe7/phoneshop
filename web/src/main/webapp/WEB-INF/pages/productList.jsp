@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
 <header>
 
@@ -20,6 +21,8 @@
 <body>
 
 <div class="container">
+
+    <a href="<c:url value="/admin/orders"/>">Admin</a>
 
     <p>PhoneShop
         Total:
@@ -79,7 +82,8 @@
                     </c:forEach>
                 </td>
                 <td>${phone.displaySizeInches}"</td>
-                <td>$ ${phone.price}</td>
+                <td><fmt:formatNumber value="${phone.price}" type="currency"
+                                      currencyCode="USD"/></td>
                 <form>
                     <td>
                         <input type="hidden" id="id" value="${phone.id}"/>

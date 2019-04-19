@@ -1,53 +1,46 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
 import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
 import com.es.phoneshop.web.controller.pages.model.UpdateCartData;
-import com.es.phoneshop.web.controller.pages.service.UpdateCartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
+@RequestMapping(value = "/cart")
 public class CartPageController {
 
     @Resource
     private CartService cartService;
 
-    @Resource
-    private UpdateCartService updateCartService;
-
-    @RequestMapping(value = "/cart", method = RequestMethod.GET)
+    @GetMapping
     public String getCart(Model model) {
-        model.addAttribute("cartView", updateCartService.setCartView());
+        model.addAttribute("updateCartData", UpdateCartData.setCartView(cartService.getCart()));
         return "cart";
     }
 
-    @RequestMapping(value = "/cart/delete/{phoneId}", method = RequestMethod.POST)
+    @DeleteMapping(value = "/delete/{phoneId}")
     public String deleteCartItem(@PathVariable long phoneId, Model model) {
         cartService.remove(phoneId);
         return "redirect:/cart";
     }
 
-    @RequestMapping(value = "/cart", method = RequestMethod.POST)
-    public String updateCart(Model model, @Valid UpdateCartData cartView, BindingResult bindingResult) {
+    @PutMapping
+    public String updateCart(Model model, @Valid UpdateCartData updateCartData, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            updateCartService.setIncorrectCartView(cartView);
-            model.addAttribute("cartView", cartView);
+            model.addAttribute("updateCartData", updateCartData);
             return "cart";
         }
-        Set<CartItem> cartItems = new HashSet<>();
-        for (CartItemUpdate cartItemUpdate : cartView.getCartItems()) {
-            cartItems.add(new CartItem(cartItemUpdate.getPhone(), cartItemUpdate.getQuantity()));
+        Map<Long, Long> cartItems = new HashMap<>();
+        for (CartItemUpdate cartItemUpdate : updateCartData.getCartItems()) {
+            cartItems.put(cartItemUpdate.getId(), cartItemUpdate.getQuantity());
         }
         cartService.update(cartItems);
         return "redirect:/cart";

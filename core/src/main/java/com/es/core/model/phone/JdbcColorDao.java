@@ -26,7 +26,7 @@ public class JdbcColorDao implements ColorDao {
     @Override
     public Set<Color> get(Long phoneKey) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", phoneKey);
-        return new HashSet<Color>((Collection<? extends Color>) namedParameterJdbcTemplate.query(SQL_GET_COLORS_BY_ID, namedParameters, new BeanPropertyRowMapper(Color.class)));
+        return new HashSet<>(namedParameterJdbcTemplate.query(SQL_GET_COLORS_BY_ID, namedParameters, new BeanPropertyRowMapper<>(Color.class)));
     }
 
     @Override

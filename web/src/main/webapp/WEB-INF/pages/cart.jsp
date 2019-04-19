@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
+<jsp:useBean id="cart" type="com.es.core.cart.Cart" scope="request"/>
 
 <html>
 <head>
@@ -12,16 +14,21 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
+
+<form id="delete" method="post">
+    <input type="hidden" name="_method" value="DELETE"/>
+</form>
+
 <div class="container">
-    <sf:form method="post" commandName="cartView">
+    <sf:form method="PUT" modelAttribute="updateCartData">
         <p>PhoneShop
-            Total:${cartView.total}
+            Total:${cart.total}
         </p>
         <p><a href="<c:url value="/productList"/>">Back to product list</a></p>
-        <c:if test="${empty cartView.cartItems}">
+        <c:if test="${empty cart.cartItems}">
             <p>Your cart is empty</p>
         </c:if>
-        <c:if test="${not empty cartView.cartItems}">
+        <c:if test="${not empty cart.cartItems}">
             <table border="1px" class="table">
                 <thead>
                 <tr>
@@ -35,46 +42,49 @@
                     <td>Action</td>
                 </tr>
                 </thead>
-                <c:forEach var="index" begin="0" varStatus="status" end="${cartView.cartItems.size() - 1}">
+                <c:forEach var="index" begin="0" varStatus="status" end="${cart.cartItems.size() - 1}">
                     <tr>
                         <td>
-                            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cartView.cartItems[status.index].phone.imageUrl}">
+                            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cart.cartItems[status.index].phone.imageUrl}">
                         </td>
                         <td>
-                                ${cartView.cartItems[status.index].phone.brand}
+                                ${cart.cartItems[status.index].phone.brand}
                         </td>
                         <td>
-                            <a href="<c:url value="productDetails/${cartView.cartItems[status.index].phone.id}"/>">${cartView.cartItems[status.index].phone.model}</a>
+                            <a href="<c:url value="productDetails/${cart.cartItems[status.index].phone.id}"/>">${cart.cartItems[status.index].phone.model}</a>
                         </td>
                         <td>
-                            <c:forEach var="color" items="${cartView.cartItems[status.index].phone.colors}"
+                            <c:forEach var="color" items="${cart.cartItems[status.index].phone.colors}"
                                        varStatus="colorIndex">
                                 ${color.code} <br>
                             </c:forEach>
                         </td>
                         <td>
-                                ${cartView.cartItems[status.index].phone.displaySizeInches}"
+                                ${cart.cartItems[status.index].phone.displaySizeInches}"
                         </td>
                         <td>
-                            $ ${cartView.cartItems[status.index].phone.price}
+                            <fmt:formatNumber value="${cart.cartItems[status.index].phone.price}" type="currency"
+                                              currencyCode="USD"/>
                         </td>
                         <td>
-                            <sf:hidden path="cartItems[${status.index}].phone.id"/>
+                            <sf:hidden path="cartItems[${status.index}].id"/>
                             <sf:input path="cartItems[${status.index}].quantity"/><br>
                             <sf:errors path="cartItems[${status.index}].quantity"/>
                         </td>
                         <td>
-                            <button formaction="<c:url value = "/cart/delete/${cartView.cartItems[status.index].phone.id}" />">
-                                Delete
-                            </button>
+                                <button form="delete" formaction="<c:url value = "/cart/delete/${cart.cartItems[status.index].phone.id}" />">
+                                    Delete
+                                </button>
                         </td>
                     </tr>
                 </c:forEach>
             </table>
-            <p><input type="submit" value="Update"></p>
+            <p>
+                <input type="submit" value="Update">
+            </p>
         </c:if>
     </sf:form>
-    <c:if test="${not empty cartView.cartItems}">
+    <c:if test="${not empty cart.cartItems}">
         <form>
             <p><input type="submit" value="Order" formmethod="get" formaction="<c:url value="/order"/>"></p>
         </form>
