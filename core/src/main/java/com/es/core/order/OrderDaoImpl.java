@@ -3,8 +3,8 @@ package com.es.core.order;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
+import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.*;
@@ -17,9 +17,7 @@ import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class OrderDaoImpl implements OrderDao {
@@ -33,6 +31,8 @@ public class OrderDaoImpl implements OrderDao {
 
     private PhoneRowMapper phoneRowMapper = new PhoneRowMapper();
 
+    private ColorRowMapper colorRowMapper = new ColorRowMapper();
+
 
     private String SQL_SAVE_ORDER = "insert into orders (firstName, lastName, deliveryAddress, contactPhoneNo," +
             " information, subtotal, deliveryPrice, totalPrice, hash, status) values (:firstName, :lastName, :deliveryAddress," +
@@ -41,11 +41,13 @@ public class OrderDaoImpl implements OrderDao {
     private String SQL_SAVE_ORDER_ITEM = "insert into orderItem (phoneId, quantity, orderId) values (:phoneId, :quantity, :orderId)";
 
     private String SQL_GET_BY_HASH = "SELECT * FROM orders JOIN orderItem ON orders.id = orderItem.orderId JOIN phones ON orderItem.phoneId = phones.id " +
+            "left JOIN phone2color ON phones.id = phone2color.phoneId left JOIN colors ON phone2color.colorId = colors.id " +
             "WHERE hash = :hash";
 
     private String SQL_FIND_ALL = "select * from orders";
 
     private String SQL_GET_BY_ID = "SELECT * FROM orders JOIN orderItem ON orders.id = orderItem.orderId JOIN phones ON orderItem.phoneId = phones.id " +
+            "left JOIN phone2color ON phones.id = phone2color.phoneId left JOIN colors ON phone2color.colorId = colors.id " +
             "WHERE orders.id = :id";
 
     private String SQL_UPDATE_STATUS = "update orders set status = :status where id = :id";
@@ -66,11 +68,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Optional<Order> get(String hash) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("hash", hash);
-        try {
-            return getOrder(SQL_GET_BY_HASH, namedParameters);
-        } catch (DataAccessException ex) {
-            return Optional.empty();
-        }
+        return getOrder(SQL_GET_BY_HASH, namedParameters);
     }
 
     @Override
@@ -81,11 +79,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Optional<Order> getById(Long orderId) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", orderId);
-        try {
-            return getOrder(SQL_GET_BY_ID, namedParameters);
-        } catch (DataAccessException ex) {
-            return Optional.empty();
-        }
+        return getOrder(SQL_GET_BY_ID, namedParameters);
     }
 
     @Override
@@ -115,12 +109,20 @@ public class OrderDaoImpl implements OrderDao {
         Order foundedOrder = namedParameterJdbcTemplate.query(sqlParam, namedParameters, resultSet -> {
             Order order = new Order();
             List<OrderItem> orderItems = new ArrayList<>();
-            while (resultSet.next()){
+            resultSet.next();
+            while (!resultSet.isAfterLast()){
                 if (resultSet.isFirst()) {
                     order = orderRowMapper.mapRow(resultSet, 1);
                 }
                 Phone phone = phoneRowMapper.mapRow(resultSet, resultSet.getRow());
                 OrderItem orderItem = orderItemRowMapper.mapRow(resultSet, resultSet.getRow());
+
+                Set<Color> colorSet = new HashSet<>();
+                do {
+                    colorSet.add(colorRowMapper.mapRow(resultSet, resultSet.getRow()));
+                } while (resultSet.next() && phone.getId() == resultSet.getLong("orderItem.phoneId"));
+
+                phone.setColors(colorSet);
                 orderItem.setPhone(phone);
                 orderItems.add(orderItem);
             }
@@ -203,6 +205,20 @@ public class OrderDaoImpl implements OrderDao {
             phone.setDescription(resultSet.getString("description"));
 
             return phone;
+        }
+    }
+
+    private class ColorRowMapper implements RowMapper<Color> {
+        private static final String TABLE_NAME = "colors";
+
+        @Override
+        public Color mapRow(ResultSet resultSet, int i) throws SQLException {
+            Color color = new Color();
+
+            color.setId(resultSet.getLong(TABLE_NAME + ".id"));
+            color.setCode(resultSet.getString("code"));
+
+            return color;
         }
     }
 
