@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
 import com.es.phoneshop.web.controller.pages.model.OrderView;
 import com.es.phoneshop.web.controller.pages.service.OrderValidator;
@@ -29,16 +28,17 @@ public class OrderPageController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getOrder(Model model) {
-        model.addAttribute("orderView", OrderView.setOrderView(cartService.getCart()));
+        model.addAttribute("orderView", orderViewService.setOrderView());
         return "order";
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String placeOrder(Model model, @Valid OrderView orderView, BindingResult bindingResult) {
-        Cart cart = cartService.getCart();
         orderValidator.validate(orderView, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("orderView", orderView);
+            cartService.update();
+            orderViewService.updateStock(orderView);
             return "order";
         } else {
             String hash = orderViewService.createOrder(orderView);

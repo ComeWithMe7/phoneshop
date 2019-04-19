@@ -124,13 +124,16 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     @Override
-    public void updateStock(Long key, Long updatedStock) {
-        Map<String, Long> namedParameters = new HashMap<>(2);
-        namedParameters.put("phoneId", key);
-        namedParameters.put("stock", updatedStock);
-        namedParameterJdbcTemplate.update(SQL_UPDATE_STOCK, namedParameters);
-    }
+    public void updateStock(Map<Long, Long> updatedStock) {
+        MapSqlParameterSource[] mapSqlParameterSources = updatedStock.entrySet().stream().map(x -> {
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("phoneId", x.getKey());
+            parameterSource.addValue("stock", x.getValue());
+            return parameterSource;
+        }).toArray(MapSqlParameterSource[]::new);
 
+        namedParameterJdbcTemplate.batchUpdate(SQL_UPDATE_STOCK, mapSqlParameterSources);
+    }
 
     private Integer selectCount() {
         return namedParameterJdbcTemplate.getJdbcOperations().queryForObject(SQL_SELECT_COUNT_TEMPLATE, Integer.class);

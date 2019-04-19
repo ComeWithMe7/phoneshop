@@ -29,6 +29,11 @@
     <url-pattern>/cart/*</url-pattern>
   </filter-mapping>
 
+  <filter-mapping>
+    <filter-name>HiddenHttpMethodFilter</filter-name>
+    <url-pattern>/admin/orders/*</url-pattern>
+  </filter-mapping>
+
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

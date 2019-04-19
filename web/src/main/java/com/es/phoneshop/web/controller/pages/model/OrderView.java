@@ -1,13 +1,11 @@
 package com.es.phoneshop.web.controller.pages.model;
 
-import com.es.core.cart.Cart;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderView {
@@ -109,14 +107,6 @@ public class OrderView {
 
     public void setInformation(String information) {
         this.information = information;
-    }
-
-    public static OrderView setOrderView(Cart cart) {
-        OrderView orderView = new OrderView();
-        List<CartItemUpdate> cartItemUpdateList = new ArrayList<>();
-        cart.getCartItems().forEach(x -> cartItemUpdateList.add(new CartItemUpdate(x.getPhone().getId(), x.getQuantity())));
-        orderView.setCartItemUpdates(cartItemUpdateList);
-        return orderView;
     }
 
 }

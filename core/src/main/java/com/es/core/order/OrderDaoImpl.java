@@ -3,7 +3,6 @@ package com.es.core.order;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
-import com.es.core.model.phone.ColorDao;
 import com.es.core.model.phone.Phone;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,9 +27,6 @@ public class OrderDaoImpl implements OrderDao {
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Resource
-    private ColorDao colorDao;
-
     private OrderRowMapper orderRowMapper = new OrderRowMapper();
 
     private OrderItemRowMapper orderItemRowMapper = new OrderItemRowMapper();
@@ -46,8 +42,6 @@ public class OrderDaoImpl implements OrderDao {
 
     private String SQL_GET_BY_HASH = "SELECT * FROM orders JOIN orderItem ON orders.id = orderItem.orderId JOIN phones ON orderItem.phoneId = phones.id " +
             "WHERE hash = :hash";
-
-    private String SQL_GET_ORDER_ITEMS_ID = "select id from orderItem WHERE orderId = :orderId";
 
     private String SQL_FIND_ALL = "select * from orders";
 
@@ -73,22 +67,7 @@ public class OrderDaoImpl implements OrderDao {
     public Optional<Order> get(String hash) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("hash", hash);
         try {
-            Order foundedOrder = namedParameterJdbcTemplate.query(SQL_GET_BY_HASH, namedParameters, resultSet -> {
-            Order order = new Order();
-            List<OrderItem> orderItems = new ArrayList<>();
-            while (resultSet.next()){
-                if (resultSet.isFirst()) {
-                    order = orderRowMapper.mapRow(resultSet, 1);
-                }
-                Phone phone = phoneRowMapper.mapRow(resultSet, resultSet.getRow());
-                OrderItem orderItem = orderItemRowMapper.mapRow(resultSet, resultSet.getRow());
-                orderItem.setPhone(phone);
-                orderItems.add(orderItem);
-            }
-            order.setOrderItems(orderItems);
-            return order;
-        });
-            return Optional.of(foundedOrder);
+            return getOrder(SQL_GET_BY_HASH, namedParameters);
         } catch (DataAccessException ex) {
             return Optional.empty();
         }
@@ -103,22 +82,7 @@ public class OrderDaoImpl implements OrderDao {
     public Optional<Order> getById(Long orderId) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", orderId);
         try {
-            Order foundedOrder = namedParameterJdbcTemplate.query(SQL_GET_BY_ID, namedParameters, resultSet -> {
-                Order order = new Order();
-                List<OrderItem> orderItems = new ArrayList<>();
-                while (resultSet.next()){
-                    if (resultSet.isFirst()) {
-                        order = orderRowMapper.mapRow(resultSet, 1);
-                    }
-                    Phone phone = phoneRowMapper.mapRow(resultSet, resultSet.getRow());
-                    OrderItem orderItem = orderItemRowMapper.mapRow(resultSet, resultSet.getRow());
-                    orderItem.setPhone(phone);
-                    orderItems.add(orderItem);
-                }
-                order.setOrderItems(orderItems);
-                return order;
-            });
-            return Optional.of(foundedOrder);
+            return getOrder(SQL_GET_BY_ID, namedParameters);
         } catch (DataAccessException ex) {
             return Optional.empty();
         }
@@ -145,13 +109,29 @@ public class OrderDaoImpl implements OrderDao {
         }).toArray(MapSqlParameterSource[]::new);
 
         namedParameterJdbcTemplate.batchUpdate(SQL_SAVE_ORDER_ITEM, mapSqlParameterSources);
+    }
 
-        namedParameterJdbcTemplate.query(SQL_GET_ORDER_ITEMS_ID, new MapSqlParameterSource("orderId", order.getId()), resultSet -> {
-            for (OrderItem orderItem : orderItems) {
-                orderItem.setId(resultSet.getLong("id"));
-                resultSet.next();
+    private Optional<Order> getOrder(String sqlParam, SqlParameterSource namedParameters) {
+        Order foundedOrder = namedParameterJdbcTemplate.query(sqlParam, namedParameters, resultSet -> {
+            Order order = new Order();
+            List<OrderItem> orderItems = new ArrayList<>();
+            while (resultSet.next()){
+                if (resultSet.isFirst()) {
+                    order = orderRowMapper.mapRow(resultSet, 1);
+                }
+                Phone phone = phoneRowMapper.mapRow(resultSet, resultSet.getRow());
+                OrderItem orderItem = orderItemRowMapper.mapRow(resultSet, resultSet.getRow());
+                orderItem.setPhone(phone);
+                orderItems.add(orderItem);
             }
+            order.setOrderItems(orderItems);
+            return order;
         });
+        if (foundedOrder.getId() == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(foundedOrder);
+        }
     }
 
     private class OrderRowMapper implements RowMapper<Order> {
@@ -180,7 +160,7 @@ public class OrderDaoImpl implements OrderDao {
         @Override
         public OrderItem mapRow(ResultSet resultSet, int i) throws SQLException {
             OrderItem orderItem = new OrderItem();
-            orderItem.setId(resultSet.getLong("orderItem.id"));
+            orderItem.setOrderId(resultSet.getLong("orderId"));
             orderItem.setQuantity(resultSet.getLong("quantity"));
             return orderItem;
         }
