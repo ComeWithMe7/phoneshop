@@ -22,8 +22,14 @@
 
 <div class="container">
 
+    <c:if test="${empty pageContext.request.remoteUser}">
+        <a href="<c:url value="/login"/>">Login</a>
+    </c:if>
     <a href="<c:url value="/admin/orders"/>">Admin</a>
-
+    <c:if test="${not empty pageContext.request.remoteUser}">
+        <a href="<c:url value="/logout"/>">Logout</a>
+        <p>${pageContext.request.remoteUser}</p>
+    </c:if>
     <p>PhoneShop
         Total:
     <div id="total"><label>${cartTotal}</label></div><br>
