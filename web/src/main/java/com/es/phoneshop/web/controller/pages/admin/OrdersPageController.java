@@ -29,14 +29,13 @@ public class OrdersPageController {
         return "adminOrderOverview";
     }
 
-    @PostMapping(value = "/{orderId}")
-    public String update(@PathVariable Long orderId, Model model, @RequestParam(name = "status") String status) {
-        OrderStatus orderStatus = OrderStatus.valueOf(status);
-        orderService.updateStatus(orderId, orderStatus);
+    @PutMapping(value = "/{orderId}")
+    public String update(@PathVariable Long orderId, Model model, @RequestParam(name = "status") OrderStatus status) {
+        orderService.updateStatus(orderId, status);
         return "redirect:/admin/orders/" + orderId;
     }
 
-    @ResponseStatus(value= HttpStatus.CONFLICT,
+    @ResponseStatus(value= HttpStatus.NOT_FOUND,
             reason="Order with such Id wasn't founded")
     @ExceptionHandler(OrderNotFoundException.class)
     public void orderNotFound() {    }

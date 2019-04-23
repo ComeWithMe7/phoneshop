@@ -2,14 +2,15 @@ package com.es.core.order;
 
 import com.es.core.cart.CartService;
 import com.es.core.model.order.Order;
-import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.PhoneDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -27,9 +28,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void placeOrder(Order order) {
         orderDao.save(order);
-        for (OrderItem orderItem : order.getOrderItems()) {
-            phoneDao.updateStock(orderItem.getPhone().getId(), phoneDao.getStock(orderItem.getPhone().getId()) - orderItem.getQuantity());
-        }
+        Map<Long, Long> updatedStock = order.getOrderItems().stream().collect(Collectors.toMap(x -> x.getPhone().getId(), x -> phoneDao.getStock(x.getPhone().getId()) - x.getQuantity()));
+        phoneDao.updateStock(updatedStock);
         cartService.cleanCart();
     }
 

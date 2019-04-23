@@ -78,13 +78,15 @@
     Phone:   ${order.contactPhoneNo}<br>
     Additional information:   ${order.information}<br>
 
-    <form>
+    <form id="delivered"  method="post">
         <input type="hidden" name="status" id="status" value="DELIVERED">
-        <p><input type="submit" value="Delivered" formmethod="post" formaction="<c:url value="/admin/orders/"/>${order.id}"></p>
+        <input type="hidden" name="_method" value="PUT"/>
+        <p><input type="submit" value="Delivered" formaction="<c:url value="/admin/orders/${order.id}"/>"></p>
     </form>
-    <form>
+    <form id="rejected" method="post">
         <input type="hidden" name="status" value="REJECTED">
-        <p><input type="submit" value="Rejected" formmethod="post" formaction="<c:url value="/admin/orders/"/>${order.id}"></p>
+        <input type="hidden" name="_method" value="PUT"/>
+        <p><input type="submit" value="Rejected" formaction="<c:url value="/admin/orders/${order.id}"/>"></p>
     </form>
 </div>
 </body>

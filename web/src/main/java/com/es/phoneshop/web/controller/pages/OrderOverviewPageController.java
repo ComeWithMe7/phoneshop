@@ -21,7 +21,7 @@ public class OrderOverviewPageController {
         return "orderOverview";
     }
 
-    @ResponseStatus(value= HttpStatus.CONFLICT,
+    @ResponseStatus(value= HttpStatus.NOT_FOUND,
             reason="Order with such hash code wasn't founded")
     @ExceptionHandler(OrderNotFoundException.class)
     public void orderNotFound() {

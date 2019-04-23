@@ -80,6 +80,18 @@ public class HttpSessionCartService implements CartService {
         cart.setProductsNumber(0L);
     }
 
+    @Override
+    public void update() {
+        for (CartItem cartItem : cart.getCartItems()) {
+            Long stock = phoneDao.getStock(cartItem.getPhone().getId());
+            if (cartItem.getQuantity() > stock) {
+                cartItem.setQuantity(stock);
+            }
+        }
+        countTotal();;
+        countProducts();
+    }
+
     private void countProducts() {
         cart.setProductsNumber(cart.getCartItems().stream()
                 .mapToLong(CartItem::getQuantity)

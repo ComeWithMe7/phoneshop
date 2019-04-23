@@ -28,7 +28,7 @@ public class ProductDetailsPageController {
         return "productDetails";
     }
 
-    @ResponseStatus(value= HttpStatus.CONFLICT,
+    @ResponseStatus(value= HttpStatus.NOT_FOUND,
             reason="Product with such id wasn't founded")
     @ExceptionHandler(ProductNotFoundException.class)
     public void productNotFound() {

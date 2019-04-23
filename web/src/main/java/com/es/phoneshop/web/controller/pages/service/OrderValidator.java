@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.controller.pages.service;
 
-import com.es.core.cart.CartService;
 import com.es.core.model.phone.PhoneDao;
 import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
 import com.es.phoneshop.web.controller.pages.model.OrderView;
@@ -17,9 +16,6 @@ public class OrderValidator implements Validator {
     @Resource
     private PhoneDao phoneDao;
 
-    @Resource
-    private CartService cartService;
-
     @Override
     public boolean supports(Class<?> aClass) {
         return OrderView.class.equals(aClass);
@@ -33,8 +29,6 @@ public class OrderValidator implements Validator {
             CartItemUpdate cartItemUpdate = cartItemUpdates.get(i);
             Long stock = phoneDao.getStock(cartItemUpdate.getId());
             if (stock < cartItemUpdate.getQuantity()) {
-                cartService.update(cartItemUpdate.getId(), stock);
-                cartItemUpdate.setQuantity(stock);
                 errors.rejectValue("cartItemUpdates[" + i + "].quantity", "out.of.stock");
             }
         }

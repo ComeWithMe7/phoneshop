@@ -12,6 +12,8 @@ public interface CartService {
 
     void update(Long phoneId, Long quantity);
 
+    void update();
+
     void remove(Long phoneId);
 
     void cleanCart();
