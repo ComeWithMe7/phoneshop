@@ -1,6 +1,13 @@
-function updateCart(phoneId) {
+function updateCart(phoneId, xhr) {
     var quantityx = "quantity" + phoneId;
+    var token = $("meta[name='_csrf']").attr("content");
+    if (!token) token = "";
+    var header = $("meta[name='_csrf_header']").attr("content");
+    if (!header) header = "";
     $.ajax({
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
         type: "POST",
         url: "/phoneshop-web/ajaxCart",
         datatype: 'json',

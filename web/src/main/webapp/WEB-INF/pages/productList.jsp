@@ -3,6 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <header>
 
@@ -14,6 +15,7 @@
     <script type="text/javascript" src="<spring:url value="/resources/js/ajaxUpdateCart.js"/> "></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <sec:csrfMetaTags />
 
     <!-- JQuerry library -->
 </header>
@@ -22,14 +24,17 @@
 
 <div class="container">
 
-    <c:if test="${empty pageContext.request.remoteUser}">
+    <sec:authorize access="!isAuthenticated()">
         <a href="<c:url value="/login"/>">Login</a>
-    </c:if>
-    <a href="<c:url value="/admin/orders"/>">Admin</a>
-    <c:if test="${not empty pageContext.request.remoteUser}">
+    </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <a href="<c:url value="/admin/orders"/>">Admin</a>
+    </sec:authorize>
+    <sec:authorize access="isAuthenticated()">
         <a href="<c:url value="/logout"/>">Logout</a>
-        <p>${pageContext.request.remoteUser}</p>
-    </c:if>
+        <sec:authentication property="name"/>
+    </sec:authorize>
+
     <p>PhoneShop
         Total:
     <div id="total"><label>${cartTotal}</label></div><br>

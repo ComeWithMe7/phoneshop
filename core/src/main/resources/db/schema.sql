@@ -4,7 +4,6 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists orderItem;
-drop table if exists users;
 
 
 create table colors (
@@ -82,8 +81,3 @@ create table orderItem (
   FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table users (
-  username VARCHAR(255) primary key,
-  password VARCHAR(255),
-  role VARCHAR(255)
-);

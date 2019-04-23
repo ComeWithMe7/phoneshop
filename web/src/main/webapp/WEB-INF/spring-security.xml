@@ -12,7 +12,7 @@
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <form-login/>
         <logout logout-success-url="/productList"/>
-        <csrf disabled="true"/>
+        <csrf/>
     </http>
 
     <authentication-manager>

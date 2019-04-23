@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <jsp:useBean id="cart" type="com.es.core.cart.Cart" scope="request"/>
 
@@ -16,6 +17,8 @@
 <body>
 
 <form id="delete" method="post">
+    <sec:csrfInput />
+
     <input type="hidden" name="_method" value="DELETE"/>
 </form>
 
