@@ -4,6 +4,9 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists orderItem;
+drop table if exists prices;
+drop table if exists phone2price;
+
 
 
 create table colors (
@@ -81,3 +84,15 @@ create table orderItem (
   FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+create table prices (
+  id BIGINT AUTO_INCREMENT primary key,
+  currency VARCHAR (55) UNIQUE
+);
+
+create table phone2price (
+  priceId BIGINT,
+  phoneId BIGINT,
+  price FLOAT,
+  FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (priceId) REFERENCES prices (id) ON DELETE CASCADE ON UPDATE CASCADE
+);

@@ -15,4 +15,5 @@ public interface PhoneDao {
     ProductListAttributes findByTemplateAndSort(String template, String sortParam, String gradation, int offset, int limit);
     Long getStock(Long key);
     void updateStock(Map<Long, Long> updatedStock);
+    void update(Phone phone);
 }

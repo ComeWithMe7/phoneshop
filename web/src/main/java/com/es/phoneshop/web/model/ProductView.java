@@ -1,52 +1,42 @@
-package com.es.core.model.phone;
+package com.es.phoneshop.web.model;
+
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-public class Phone {
+public class ProductView {
+
     private Long id;
+    @NotEmpty
     private String brand;
+    @NotEmpty
     private String model;
     private BigDecimal price;
-
     private BigDecimal displaySizeInches;
-
     private Integer weightGr;
 
     private BigDecimal lengthMm;
-
     private BigDecimal widthMm;
-
     private BigDecimal heightMm;
-
     private Date announced;
-
     private String deviceType;
-
     private String os;
 
     private Set<Color> colors = Collections.EMPTY_SET;
-
     private String displayResolution;
-
     private Integer pixelDensity;
-
     private String displayTechnology;
-
     private BigDecimal backCameraMegapixels;
-
     private BigDecimal frontCameraMegapixels;
-
     private BigDecimal ramGb;
-
     private BigDecimal internalStorageGb;
-
     private Integer batteryCapacityMah;
-
     private BigDecimal talkTimeHours;
-
     private BigDecimal standByTimeHours;
 
     private String bluetooth;
@@ -54,10 +44,8 @@ public class Phone {
     private String positioning;
 
     private String imageUrl;
-
+    @NotEmpty
     private String description;
-
-    private Set<Price> priceSet;
 
     public String getBrand() {
         return brand;
@@ -275,11 +263,38 @@ public class Phone {
         this.id = id;
     }
 
-    public Set<Price> getPriceSet() {
-        return priceSet;
+    public ProductView() {
     }
 
-    public void setPriceSet(Set<Price> priceSet) {
-        this.priceSet = priceSet;
+    public static ProductView createProductView(Phone phone) {
+        ProductView productView = new ProductView();
+        productView.setAnnounced(phone.getAnnounced());
+        productView.setBackCameraMegapixels(phone.getBackCameraMegapixels());
+        productView.setBatteryCapacityMah(phone.getBatteryCapacityMah());
+        productView.setBluetooth(phone.getBluetooth());
+        productView.setBrand(phone.getBrand());
+        productView.setColors(phone.getColors());
+        productView.setDescription(phone.getDescription());
+        productView.setDeviceType(phone.getDeviceType());
+        productView.setDisplayResolution(phone.getDisplayResolution());
+        productView.setDisplaySizeInches(phone.getDisplaySizeInches());
+        productView.setDisplayTechnology(phone.getDisplayTechnology());
+        productView.setFrontCameraMegapixels(phone.getFrontCameraMegapixels());
+        productView.setHeightMm(phone.getHeightMm());
+        productView.setId(phone.getId());
+        productView.setImageUrl(phone.getImageUrl());
+        productView.setInternalStorageGb(phone.getInternalStorageGb());
+        productView.setLengthMm(phone.getLengthMm());
+        productView.setModel(phone.getModel());
+        productView.setOs(phone.getOs());
+        productView.setPixelDensity(phone.getPixelDensity());
+        productView.setPositioning(phone.getPositioning());
+        productView.setPrice(phone.getPrice());
+        productView.setRamGb(phone.getRamGb());
+        productView.setStandByTimeHours(phone.getStandByTimeHours());
+        productView.setTalkTimeHours(phone.getTalkTimeHours());
+        productView.setWeightGr(phone.getWeightGr());
+        productView.setWidthMm(phone.getWidthMm());
+        return productView;
     }
 }

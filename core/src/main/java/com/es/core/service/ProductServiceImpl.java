@@ -54,4 +54,9 @@ public class ProductServiceImpl implements ProductService {
         Optional<Phone> phone = phoneDao.get(id);
         return phone.orElseThrow(ProductNotFoundException::new);
     }
+
+    @Override
+    public void update(Phone phone) {
+        phoneDao.update(phone);
+    }
 }
