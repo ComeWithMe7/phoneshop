@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.model;
+package com.es.phoneshop.web.model;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

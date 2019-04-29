@@ -1,6 +1,7 @@
 package com.es.core.model.phone;
 
-import com.es.core.model.phone.service.ProductListAttributes;
+import com.es.core.dao.PhoneDao;
+import com.es.core.service.ProductListAttributes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 <head>
@@ -79,11 +80,14 @@
     Additional information:   ${order.information}<br>
 
     <form id="delivered"  method="post">
+        <sec:csrfInput />
+
         <input type="hidden" name="status" id="status" value="DELIVERED">
         <input type="hidden" name="_method" value="PUT"/>
         <p><input type="submit" value="Delivered" formaction="<c:url value="/admin/orders/${order.id}"/>"></p>
     </form>
     <form id="rejected" method="post">
+        <sec:csrfInput />
         <input type="hidden" name="status" value="REJECTED">
         <input type="hidden" name="_method" value="PUT"/>
         <p><input type="submit" value="Rejected" formaction="<c:url value="/admin/orders/${order.id}"/>"></p>

@@ -1,4 +1,4 @@
-package com.es.core.order;
+package com.es.core.service;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;

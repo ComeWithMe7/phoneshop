@@ -1,8 +1,8 @@
-package com.es.phoneshop.web.controller.pages.service;
+package com.es.phoneshop.web.service;
 
-import com.es.core.model.phone.PhoneDao;
-import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
-import com.es.phoneshop.web.controller.pages.model.OrderView;
+import com.es.core.dao.PhoneDao;
+import com.es.phoneshop.web.model.CartItemUpdate;
+import com.es.phoneshop.web.model.OrderView;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.model;
+package com.es.phoneshop.web.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
