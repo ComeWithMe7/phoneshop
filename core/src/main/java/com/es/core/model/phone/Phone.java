@@ -57,6 +57,8 @@ public class Phone {
 
     private String description;
 
+    private Set<Price> priceSet;
+
     public String getBrand() {
         return brand;
     }
@@ -271,5 +273,13 @@ public class Phone {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Price> getPriceSet() {
+        return priceSet;
+    }
+
+    public void setPriceSet(Set<Price> priceSet) {
+        this.priceSet = priceSet;
     }
 }

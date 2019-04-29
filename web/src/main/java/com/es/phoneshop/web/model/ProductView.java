@@ -12,6 +12,7 @@ import java.util.Set;
 public class ProductView {
 
     private Long id;
+    @NotEmpty
     private String brand;
     @NotEmpty
     private String model;
