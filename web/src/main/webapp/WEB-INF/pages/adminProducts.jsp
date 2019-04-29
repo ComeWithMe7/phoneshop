@@ -24,36 +24,19 @@
 
 <div class="container">
 
-    <sec:authorize access="!isAuthenticated()">
-        <a href="<c:url value="/login"/>">Login</a>
-    </sec:authorize>
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
-        <a href="<c:url value="/admin"/>">Admin</a>
-    </sec:authorize>
-    <sec:authorize access="isAuthenticated()">
-        <a href="<c:url value="/logout"/>">Logout</a>
-        <sec:authentication property="name"/>
-    </sec:authorize>
 
-    <p>PhoneShop
-        Total:
-    <div id="total"><label>${cartTotal}</label></div><br>
-    <div id="count"><label>${count}</label></div> Items
-    </p>
+    <p>PhoneShop</p>
     <form method="get">
         <p>
             <input type="search" name="searchLine" placeholder="Site search"
                    value="<c:out value="${searchLineAttrib}"/>">
             <input type="hidden" name="sortingParameter" value="${sortParam}"/>
             <input type="hidden" name="gradation" value="${gradation}"/>
-            <input type="submit" value="Search"></p>
+            <input type="submit" value="Search">
         </p>
     </form>
     <p>
         Hello from product list!
-    </p>
-    <p>
-        <a href="<c:url value="/cart"/>">Cart</a>
     </p>
     <p>
         Found
@@ -76,8 +59,6 @@
                 <a href="<c:url value="/productList"><c:param name="searchLine" value="${searchLineAttrib}"/><c:param name="sortingParameter" value="displaySize"/><c:param name="gradation" value="down"/></c:url>">down</a>
             </td>
             <td>Price</td>
-            <td>Quantity</td>
-            <td>Action</td>
         </tr>
         </thead>
         <c:forEach var="phone" items="${phones}">
@@ -86,7 +67,7 @@
                     <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                 </td>
                 <td>${phone.brand}</td>
-                <td><a href="<c:url value="productDetails/${phone.id}"/>">${phone.model}</a></td>
+                <td><a href="<c:url value="/admin/productDetails/${phone.id}"/>">${phone.model}</a></td>
                 <td>
                     <c:forEach var="color" items="${phone.colors}">
                         ${color.code} <br>
@@ -95,16 +76,6 @@
                 <td>${phone.displaySizeInches}"</td>
                 <td><fmt:formatNumber value="${phone.price}" type="currency"
                                       currencyCode="USD"/></td>
-                <form>
-                    <td>
-                        <input type="hidden" id="id" value="${phone.id}"/>
-                        <input id="quantity${phone.id}" value="1"/>
-                        <div id="quantityError${phone.id}"></div>
-                    </td>
-                    <td>
-                        <button type="button" onclick="updateCart(${phone.id})">Add to</button>
-                    </td>
-                </form>
             </tr>
         </c:forEach>
     </table>

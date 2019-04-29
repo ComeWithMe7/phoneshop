@@ -50,6 +50,15 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private String SQL_UPDATE_STOCK = "update stocks set stock = :stock where phoneId = :phoneId";
 
+    private static final String SQL_UPDATE_PHONE = "UPDATE phones SET brand=:brand, model=:model, price=:price," +
+            " displaySizeInches=:displaySizeInches, weightGr=:weightGr, lengthMm=:lengthMm, widthMm=:widthMm," +
+            " heightMm=:heightMm, announced=:announced, deviceType=:deviceType, os=:os, displayResolution=:displayResolution," +
+            " pixelDensity=:pixelDensity, displayTechnology=:displayTechnology, backCameraMegapixels=:backCameraMegapixels," +
+            " frontCameraMegapixels=:frontCameraMegapixels, ramGb=:ramGb, internalStorageGb=:internalStorageGb," +
+            " batteryCapacityMah=:batteryCapacityMah, talkTimeHours=:talkTimeHours, standByTimeHours=:standByTimeHours," +
+            " bluetooth=:bluetooth, positioning=:positioning, imageUrl=:imageUrl, description=:description" +
+            " WHERE id=:id";
+
     private Map<String, String> sortParams;
 
     public JdbcPhoneDao() {
@@ -134,6 +143,12 @@ public class JdbcPhoneDao implements PhoneDao {
         }).toArray(MapSqlParameterSource[]::new);
 
         namedParameterJdbcTemplate.batchUpdate(SQL_UPDATE_STOCK, mapSqlParameterSources);
+    }
+
+    @Override
+    public void update(Phone phone) {
+        SqlParameterSource phoneParam = new BeanPropertySqlParameterSource(phone);
+        namedParameterJdbcTemplate.update(SQL_UPDATE_PHONE, phoneParam);
     }
 
     private Integer selectCount() {
