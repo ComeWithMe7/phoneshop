@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.model;
+package com.es.phoneshop.web.model;
 
 import com.es.core.cart.Cart;
 

@@ -1,14 +1,14 @@
-package com.es.phoneshop.web.controller.pages.service;
+package com.es.phoneshop.web.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
-import com.es.core.cart.CartService;
+import com.es.core.service.CartService;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
-import com.es.core.order.OrderService;
-import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
-import com.es.phoneshop.web.controller.pages.model.OrderView;
+import com.es.core.service.OrderService;
+import com.es.phoneshop.web.model.CartItemUpdate;
+import com.es.phoneshop.web.model.OrderView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

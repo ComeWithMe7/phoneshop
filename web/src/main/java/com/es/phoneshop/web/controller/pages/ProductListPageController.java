@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartService;
-import com.es.core.model.phone.service.ProductListAttributes;
-import com.es.core.model.phone.service.ProductService;
+import com.es.core.service.CartService;
+import com.es.core.service.ProductListAttributes;
+import com.es.core.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

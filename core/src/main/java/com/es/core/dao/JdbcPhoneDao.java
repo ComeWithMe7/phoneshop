@@ -1,6 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
-import com.es.core.model.phone.service.ProductListAttributes;
+import com.es.core.model.phone.Phone;
+import com.es.core.service.ProductListAttributes;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 
 @Component
-public class JdbcPhoneDao implements PhoneDao{
+public class JdbcPhoneDao implements PhoneDao {
 
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

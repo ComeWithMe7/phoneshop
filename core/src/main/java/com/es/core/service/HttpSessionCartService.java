@@ -1,7 +1,9 @@
-package com.es.core.cart;
+package com.es.core.service;
 
+import com.es.core.cart.Cart;
+import com.es.core.cart.CartItem;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.dao.PhoneDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,16 +53,6 @@ public class HttpSessionCartService implements CartService {
             optionalCartItem.ifPresent(cartItem1 -> newCartItems.add(new CartItem(cartItem1.getPhone(), cartItem.getValue())));
         }
         cart.setCartItems(newCartItems);
-        countTotal();
-        countProducts();
-    }
-
-    @Override
-    public void update(Long phoneId, Long quantity) {
-        Optional<CartItem> cartItem = cart.getCartItems().stream()
-                .filter(x -> x.getPhone().getId().equals(phoneId))
-                .findAny();
-        cartItem.ifPresent(cartItem1 -> cartItem1.setQuantity(quantity));
         countTotal();
         countProducts();
     }

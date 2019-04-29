@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartService;
-import com.es.phoneshop.web.controller.pages.model.AjaxCartUpdate;
-import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
+import com.es.core.service.CartService;
+import com.es.phoneshop.web.model.AjaxCartUpdate;
+import com.es.phoneshop.web.model.CartItemUpdate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

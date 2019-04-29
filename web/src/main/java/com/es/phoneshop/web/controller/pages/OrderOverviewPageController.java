@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.order.OrderNotFoundException;
-import com.es.core.order.OrderService;
+import com.es.core.exceptions.OrderNotFoundException;
+import com.es.core.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

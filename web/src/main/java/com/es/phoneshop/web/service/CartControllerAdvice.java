@@ -1,6 +1,6 @@
-package com.es.phoneshop.web.controller.pages.service;
+package com.es.phoneshop.web.service;
 
-import com.es.core.cart.CartService;
+import com.es.core.service.CartService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

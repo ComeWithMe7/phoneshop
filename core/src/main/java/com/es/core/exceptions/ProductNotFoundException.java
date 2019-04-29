@@ -1,4 +1,4 @@
-package com.es.core.model.phone.service;
+package com.es.core.exceptions;
 
 public class ProductNotFoundException extends RuntimeException {
 

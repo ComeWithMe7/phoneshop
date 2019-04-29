@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartService;
-import com.es.phoneshop.web.controller.pages.model.CartItemUpdate;
-import com.es.phoneshop.web.controller.pages.model.UpdateCartData;
+import com.es.core.service.CartService;
+import com.es.phoneshop.web.model.CartItemUpdate;
+import com.es.phoneshop.web.model.UpdateCartData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

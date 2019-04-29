@@ -1,6 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
-import com.es.core.model.phone.service.ProductListAttributes;
+import com.es.core.model.phone.Phone;
+import com.es.core.service.ProductListAttributes;
 
 import java.util.Map;
 import java.util.Optional;

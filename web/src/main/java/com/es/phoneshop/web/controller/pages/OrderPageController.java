@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartService;
-import com.es.phoneshop.web.controller.pages.model.OrderView;
-import com.es.phoneshop.web.controller.pages.service.OrderValidator;
-import com.es.phoneshop.web.controller.pages.service.OrderViewService;
+import com.es.core.service.CartService;
+import com.es.phoneshop.web.model.OrderView;
+import com.es.phoneshop.web.service.OrderValidator;
+import com.es.phoneshop.web.service.OrderViewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

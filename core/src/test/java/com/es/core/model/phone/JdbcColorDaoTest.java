@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.dao.ColorDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.dao.DataAccessException;
